@@ -1,6 +1,8 @@
-import { Button, Frog, TextInput } from 'frog'
+import { Button, Frog } from 'frog'
 // import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
+import { StackClient } from "@stackso/js-core";
+import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
 import { devtools } from 'frog/dev';
@@ -11,6 +13,9 @@ import { serveStatic } from 'frog/serve-static';
 //   runtime: 'edge',
 // }
 
+// Load environment variables from .env file
+dotenv.config();
+
 export const app = new Frog({
   assetsPath: '/',
   basePath: '/api/quest/april',
@@ -18,53 +23,35 @@ export const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-app.frame('/', (c) => {
-  const { buttonValue, inputText, status } = c
-  const fruit = inputText || buttonValue
+// Initialize the client
+const stack = new StackClient({
+  // Get your API key and point system id from the Stack dashboard (stack.so)
+  apiKey: process.env.STACK_API_KEY || '', 
+  pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
+});
+
+
+app.frame('/', async (c) => {
+  const {buttonValue} = c;
+  
+  if (buttonValue === 'add') {
+    await stack.track("DailyWalletLogin", {
+      points: 15,
+      account: "0x2eeb301387D6BDa23E02fa0c7463507c68b597B5",
+      uniqueId: `${(new Date()).toISOString().split('T')[0]}-0x2eeb301387D6BDa23E02fa0c7463507c68b597B5`,
+    });
+  }
+
   return c.res({
+    action: '/',
     image: (
-      <div
-        style={{
-          alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
-          backgroundSize: '100% 100%',
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          height: '100%',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            color: 'white',
-            fontSize: 60,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
-        </div>
+      <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>
+        Perform add points
       </div>
     ),
     intents: [
-      <TextInput placeholder="Enter custom fruit..." />,
-      <Button value="apples">Apples</Button>,
-      <Button value="oranges">Oranges</Button>,
-      <Button value="bananas">Bananas</Button>,
-      status === 'response' && <Button.Reset>Reset</Button.Reset>,
-    ],
+      <Button value='add'>Add Points</Button>,
+    ]
   })
 })
 
