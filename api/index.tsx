@@ -121,8 +121,6 @@ app.frame('/first-quest', async (c) => {
 
     const userCollected = await responseUserCollected.json();
 
-    console.log('User Collected:', userCollected);
-
     if (userCollected.collections.length > 0) {
       await stack.track("Mint - Forage x 747 Airlines", {
         points: 250,
@@ -176,7 +174,7 @@ app.frame('/first-quest', async (c) => {
           <p style={{ fontSize: 30 }}>Task 1 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Forage x 747 Airlines ]</p>
           {userCollected.collections.length > 0 ? (
-            <p style={{ fontSize: 24 }}>Qualified ✅</p>
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
           )}
@@ -256,7 +254,7 @@ app.frame('/second-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 2 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - All 747 Airlines NFTs (made in April) ]</p>
-          {/* <p style={{ fontSize: 24 }}> Qualified ✅ </p> */}
+          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
           <p style={{ fontSize: 24 }}> Not qualified ❌</p>
         </div>
       ),
@@ -335,7 +333,7 @@ app.frame('/third-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 3 - 500 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - At least 1 747 Airlines NFT (in $crash) ]</p>
-          {/* <p style={{ fontSize: 24 }}> Qualified ✅ </p> */}
+          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
           <p style={{ fontSize: 24 }}> Not qualified ❌</p>
         </div>
       ),
