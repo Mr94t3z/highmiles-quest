@@ -18,7 +18,7 @@ dotenv.config();
 
 export const app = new Frog({
   assetsPath: '/',
-  basePath: '/api/quest/april',
+  basePath: '/api/april',
   imageOptions: {
     /* Other default options */
     fonts: [
@@ -183,7 +183,7 @@ app.frame('/first-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/first-quest'>🔄 Check</Button>,
+        <Button action='/first-quest'>🔄 Refresh</Button>,
         <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⚡️</Button.Link>,
         <Button action='/second-quest'>⏩️ Next</Button>,
       ],
@@ -262,7 +262,7 @@ app.frame('/second-quest', async (c) => {
       ),
       intents: [
         <Button action='/first-quest'>⏪ Back</Button>,
-        <Button action='/second-quest'>🔄 Check</Button>,
+        <Button action='/second-quest'>🔄 Refresh</Button>,
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>⚡️ Mint</Button.Link>,  
         <Button action='/third-quest'>⏩️ Next</Button>,
       ],
@@ -341,7 +341,7 @@ app.frame('/third-quest', async (c) => {
       ),
       intents: [
         <Button action='/second-quest'>⏪ Back</Button>,
-        <Button action='/third-quest'>🔄 Check</Button>,
+        <Button action='/third-quest'>🔄 Refresh</Button>,
         <Button.Link href='https://zora.co/explore/crash'>⚡️ Mint</Button.Link>,  
         <Button action='/fourth-quest'>⏩️ Next</Button>,
       ],
