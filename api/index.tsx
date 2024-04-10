@@ -46,102 +46,8 @@ const stack = new StackClient({
 
 // Neynar API base URL
 const baseUrlNeynar = 'https://api.neynar.com/v2/farcaster';
-
-// // Define the type for the CSV row
-// interface TaskData {
-//   taskType: string;
-//   taskDescription: string;
-//   pointsAwarded: number;
-//   smartContract: string;
-//   links: string;
-//   claimAmount: number;
-//   deadline: string;
-// }
-
-// const apiData: TaskData[] = [];
-
-// // Define unsupported deadline format(s)
-// const unsupportedDeadlineFormat = ['Unknown'];
-
-// async function readCSVFromUrl(csvUrl: string) {
-//   try {
-//     const response = await fetch(csvUrl);
-
-//     // Check if the fetch was successful
-//     if (!response.ok) {
-//       throw new Error(`Failed to fetch CSV: ${response.status} ${response.statusText}`);
-//     }
-
-//     const csvText = await response.text();
-//     const rows = csvText.split('\n');
-
-//     rows.forEach((row, index) => {
-//       if (index === 0 || row.trim() === '') return; // Skip header row and empty rows
-
-//       const columns = row.split(',');
-//       if (columns.length < 7) { // Assuming 7 columns expected
-//         console.error(`Skipping malformed row: ${row}`);
-//         return;
-//       }
-
-//       const deadline = columns[6].trim();
-
-//       if (!unsupportedDeadlineFormat.includes(deadline)) {
-//         const taskData: TaskData = {
-//           taskType: columns[0],
-//           taskDescription: columns[1],
-//           pointsAwarded: parseInt(columns[2]),
-//           smartContract: columns[3],
-//           links: columns[4],
-//           claimAmount: parseInt(columns[5]),
-//           deadline: deadline,
-//         };
-//         apiData.push(taskData);
-//       }
-//     });
-
-//     console.log('CSV data successfully processed:');
-//     console.log(apiData); // Log the loaded CSV data to the console
-//   } catch (error) {
-//     console.error('Error loading or processing CSV:', error);
-//   }
-// }
-
-
-// // Call function to populate data, passing the CSV URL as an argument
-// const csvUrl = 'https://raw.githubusercontent.com/Mr94t3z/highmiles-quest/master/api/resources/HighMiles%20Tasks%20-%20April%202024.csv';
-// readCSVFromUrl(csvUrl);
-
-
-// app.frame('/', async (c) => {
-//   const {buttonValue} = c;
-  
-//   if (buttonValue === 'add') {
-//     await stack.track("user_signup", {
-//       points: -50,
-//       account: "0x130946d8dF113e45f44e13575012D0cFF1E53e37"
-//     });
-    
-//     // await stack.track("DailyWalletLogin", {
-//     //   points: 15,
-//     //   account: "0x2eeb301387D6BDa23E02fa0c7463507c68b597B5",
-//     //   uniqueId: `${(new Date()).toISOString().split('T')[0]}-0x2eeb301387D6BDa23E02fa0c7463507c68b597B5`,
-//     // });
-//   }
-
-//   return c.res({
-//     action: '/',
-//     image: (
-//       <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>
-//         Perform add points
-//       </div>
-//     ),
-//     intents: [
-//       <Button value='add'>Add Points</Button>,
-//       <Button action='/frist-quest'>Task 1</Button>,
-//     ]
-//   })
-// })
+// Reservoir API base URL
+const baseUrlReservoir = 'https://api-base.reservoir.tools';
 
 
 app.frame('/', (c) => {
@@ -187,8 +93,12 @@ app.frame('/first-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // const fid = 254520;
+
+  const contractAddress = process.env.FIRST_QUEST_SMART_CONTRACT_ADDRESS || '';
+
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=397668&viewer_fid=397668`, {
+    const responseUserData = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -196,46 +106,33 @@ app.frame('/first-quest', async (c) => {
       },
     });
 
-    const data = await response.json();
+    const data = await responseUserData.json();
     const userData = data.users[0];
 
-    const eth_addresses = userData.verified_addresses.eth_addresses as string;
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    console.log(eth_addresses);
+    const responseUserCollected = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/collections/v4?collection=${contractAddress}`, {
+      method: 'GET',
+      headers: {
+        'Accept': '*/*',
+        'x-api-key': process.env.RESERVOIR_API_KEY || '',
+      }
+    })
 
-    if ( eth_addresses === eth_addresses) {
-      await stack.track("Mint - Forage x 747 Airlines	", {
+    const userCollected = await responseUserCollected.json();
+
+    console.log('User Collected:', userCollected);
+
+    if (userCollected.collections.length > 0) {
+      await stack.track("Mint - Forage x 747 Airlines", {
         points: 250,
-        account: "0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291"
+        account: eth_addresses,
+        uniqueId: eth_addresses
       });
-      
-      // await stack.track("DailyWalletLogin", {
-      //   points: 15,
-      //   account: "0x2eeb301387D6BDa23E02fa0c7463507c68b597B5",
-      //   uniqueId: `${(new Date()).toISOString().split('T')[0]}-0x2eeb301387D6BDa23E02fa0c7463507c68b597B5`,
-      // });
+      console.log('Points added successfully!');
     } else {
       console.log('Failed to add points!');
     }
-
-    const currentDate = new Date();
-    const currentDateString = currentDate.toISOString().split('T')[0]; // Get current date in 'YYYY-MM-DD' format
-      // Check if the current date is within April 2024
-      if (currentDate.getFullYear() === 2024 && currentDate.getMonth() === 3 /* April is 3rd month */) {
-        // Check if the current date is before April 29, 2024 (end date)
-        if (currentDate.getDate() <= 28) {
-          // Log the event with the unique identifier including month and year
-            await stack.track("Mint - Forage x 747 Airlines", {
-              points: 250,
-              account: "0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291",
-              uniqueId: `${currentDateString}-0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291`,
-            });
-        } else {
-          console.log("Event cannot be claimed after April 28, 2024.");
-        }
-      } else {
-        console.log("Event can only be claimed in April 2024.");
-      }
 
     return c.res({
       image: (
@@ -278,8 +175,11 @@ app.frame('/first-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 1 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Forage x 747 Airlines ]</p>
-          {/* <p style={{ fontSize: 24 }}> Qualified ✅ </p> */}
-          <p style={{ fontSize: 24 }}> Not qualified ❌</p>
+          {userCollected.collections.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Qualified ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
         </div>
       ),
       intents: [
