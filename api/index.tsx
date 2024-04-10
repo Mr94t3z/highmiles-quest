@@ -76,7 +76,7 @@ app.frame('/', (c) => {
             whiteSpace: 'pre-wrap',
           }}
         >
-          <p>Hi Passengers! ✋🏻</p>
+          <p>Hi Passengers! 👨🏻‍✈️</p>
           Welcome to HighMiles© Quest! ✈️
         </div>
       ),
