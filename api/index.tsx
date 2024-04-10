@@ -188,7 +188,7 @@ app.frame('/first-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=397668&viewer_fid=397668`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -198,7 +198,44 @@ app.frame('/first-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
-  
+
+    const eth_addresses = userData.verified_addresses.eth_addresses as string;
+
+    console.log(eth_addresses);
+
+    if ( eth_addresses === eth_addresses) {
+      await stack.track("Mint - Forage x 747 Airlines	", {
+        points: 250,
+        account: "0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291"
+      });
+      
+      // await stack.track("DailyWalletLogin", {
+      //   points: 15,
+      //   account: "0x2eeb301387D6BDa23E02fa0c7463507c68b597B5",
+      //   uniqueId: `${(new Date()).toISOString().split('T')[0]}-0x2eeb301387D6BDa23E02fa0c7463507c68b597B5`,
+      // });
+    } else {
+      console.log('Failed to add points!');
+    }
+
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0]; // Get current date in 'YYYY-MM-DD' format
+      // Check if the current date is within April 2024
+      if (currentDate.getFullYear() === 2024 && currentDate.getMonth() === 3 /* April is 3rd month */) {
+        // Check if the current date is before April 29, 2024 (end date)
+        if (currentDate.getDate() <= 28) {
+          // Log the event with the unique identifier including month and year
+            await stack.track("Mint - Forage x 747 Airlines", {
+              points: 250,
+              account: "0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291",
+              uniqueId: `${currentDateString}-0xcB46Bfb7315eca9ECd42D02C1AE174DA4BBFf291`,
+            });
+        } else {
+          console.log("Event cannot be claimed after April 28, 2024.");
+        }
+      } else {
+        console.log("Event can only be claimed in April 2024.");
+      }
 
     return c.res({
       image: (
@@ -339,8 +376,8 @@ app.frame('/second-quest', async (c) => {
 });
 
 
-// Second Quest
-app.frame('/second-quest', async (c) => {
+// Third Quest
+app.frame('/third-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -396,17 +433,17 @@ app.frame('/second-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 2 - 747 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Mint - All 747 Airlines NFTs (made in April) ]</p>
+          <p style={{ fontSize: 30 }}>Task 3 - 500 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Mint - At least 1 747 Airlines NFT (in $crash) ]</p>
           {/* <p style={{ fontSize: 24 }}> Qualified ✅ </p> */}
           <p style={{ fontSize: 24 }}> Not qualified ❌</p>
         </div>
       ),
       intents: [
-        <Button action='/first-quest'>⏪ Back</Button>,
-        <Button action='/second-quest'>🔄 Check</Button>,
-        <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>⚡️ Mint</Button.Link>,  
-        <Button action='/third-quest'>⏩️ Next</Button>,
+        <Button action='/second-quest'>⏪ Back</Button>,
+        <Button action='/third-quest'>🔄 Check</Button>,
+        <Button.Link href='https://zora.co/explore/crash'>⚡️ Mint</Button.Link>,  
+        <Button action='/fourth-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
