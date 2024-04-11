@@ -181,8 +181,9 @@ app.frame('/first-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/first-quest'>🔄 Check</Button>,
         <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⌁</Button.Link>,
+        <Button action='/first-quest'>🔄 Check</Button>,
+        <Button action='/'>⏪ Back</Button>,
         <Button action='/second-quest'>⏩️ Next</Button>,
       ],
     });
@@ -318,8 +319,8 @@ app.frame('/second-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/second-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>Mint ⌁</Button.Link>,
+        <Button action='/second-quest'>🔄 Check</Button>,
         <Button action='/first-quest'>⏪ Back</Button>,  
         <Button action='/third-quest'>⏩️ Next</Button>,
       ],
@@ -397,8 +398,8 @@ app.frame('/third-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/third-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
+        <Button action='/third-quest'>🔄 Check</Button>,
         <Button action='/second-quest'>⏪ Back</Button>,
         <Button action='/fourth-quest'>⏩️ Next</Button>,
       ],
@@ -476,8 +477,8 @@ app.frame('/fourth-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/fourth-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b/53'>Mint ⌁</Button.Link>,
+        <Button action='/fourth-quest'>🔄 Check</Button>,
         <Button action='/third-quest'>⏪ Back</Button>,
         <Button action='/fifth-quest'>⏩️ Next</Button>,
       ],
@@ -555,8 +556,8 @@ app.frame('/fifth-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/fifth-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
+        <Button action='/fifth-quest'>🔄 Check</Button>,
         <Button action='/fourth-quest'>⏪ Back</Button>,
         <Button action='/sixth-quest'>⏩️ Next</Button>,
       ],
