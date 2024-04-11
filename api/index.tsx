@@ -634,8 +634,8 @@ app.frame('/sixth-quest', async (c) => {
     const userDataResponse = await responseUserData.json();
 
     if (userDataResponse.tokens.length > 0) {
-      await stack.track("Mint - Imagine x 747 Air NFT", {
-        points: 333,
+      await stack.track("Mint - Destinations! Boarding Pass", {
+        points: 2000,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
