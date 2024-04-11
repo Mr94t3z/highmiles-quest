@@ -5,8 +5,8 @@ import { StackClient } from "@stackso/js-core";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
-// import { devtools } from 'frog/dev';
-// import { serveStatic } from 'frog/serve-static';
+import { devtools } from 'frog/dev';
+import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -334,7 +334,7 @@ app.frame('/second-quest', async (c) => {
 });
 
 
-// Third Quest
+// Third Quest - Skip
 app.frame('/third-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
@@ -433,6 +433,7 @@ app.frame('/fourth-quest', async (c) => {
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
+    // Token address
     const tokenAddress = process.env.FOURTH_QUEST_TOKEN_ADDRESS || '';
 
     // Get user tokens
@@ -520,7 +521,7 @@ app.frame('/fourth-quest', async (c) => {
 });
 
 
-// Fifth Quest
+// Fifth Quest - Skip
 app.frame('/fifth-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
@@ -577,8 +578,8 @@ app.frame('/fifth-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 3 - 500 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Mint - At least 1 747 Airlines NFT (in $crash) ]</p>
+          <p style={{ fontSize: 30 }}>Task 5 - 500 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Mint - leaderboard from 747 game ]</p>
           {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
           <p style={{ fontSize: 24 }}> Not qualified ❌</p>
         </div>
@@ -598,8 +599,117 @@ app.frame('/fifth-quest', async (c) => {
   }
 });
 
+
+// Sixth Quest
+app.frame('/sixth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': 'NEYNAR_FROG_FM',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // Token address
+    const tokenAddress = process.env.SIXTH_QUEST_TOKEN_ADDRESS || '';
+
+    // Get user tokens
+    const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${tokenAddress}`, {
+      headers: {
+        'accept': 'application/json',
+        'x-api-key': process.env.RESERVOIR_API_KEY || '',
+      },
+    });
+
+    const userDataResponse = await responseUserData.json();
+
+    if (userDataResponse.tokens.length > 0) {
+      await stack.track("Mint - Imagine x 747 Air NFT", {
+        points: 333,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log('User qualified!');
+    } else {
+      console.log('User not qualified!');
+    }
+  
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 6 - 2000 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Mint - Destinations! Boarding Pass ]</p>
+          {userDataResponse.tokens.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://zora.co/collect/base:0xcd6a95bf6c52a76f75049024b3660307b0078fef/2'>Mint ⌁</Button.Link>,
+        <Button action='/fifth-quest'>🔄 Check</Button>,
+        <Button action='/fourth-quest'>⏪ Back</Button>,
+        <Button action='/sixth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
 // Uncomment for local server testing
-// devtools(app, { serveStatic });
+devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
