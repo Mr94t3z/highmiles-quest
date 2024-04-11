@@ -45,10 +45,11 @@ const stack = new StackClient({
 });
 
 // Neynar API base URL
-const baseUrlNeynar = 'https://api.neynar.com/v2/farcaster';
+const baseUrlNeynar = process.env.BASE_URL_NEYNAR;
 // Reservoir API base URL
-const baseUrlReservoir = 'https://api-base.reservoir.tools';
-
+const baseUrlReservoir = process.env.BASE_URL_RESEVOIR;
+// Zora API base URL
+const baseUrlZora = process.env.BASE_URL_ZORA;
 
 app.frame('/', (c) => {
     return c.res({
@@ -181,7 +182,7 @@ app.frame('/first-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/first-quest'>🔄 Refresh</Button>,
+        <Button action='/first-quest'>🔄 Check</Button>,
         <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⚡️</Button.Link>,
         <Button action='/second-quest'>⏩️ Next</Button>,
       ],
@@ -211,7 +212,62 @@ app.frame('/second-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
-  
+    
+    const responseTokenData = await fetch(`${baseUrlZora}/0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b?offset=0&limit=50&sort_key=CREATED&sort_direction=DESC`);
+
+    const tokenData = await responseTokenData.json();
+    let qualified = false;
+    
+    // Check if data is available
+    if (tokenData.results && tokenData.results.length > 0) {
+      // Extract token_id, token_name, start_datetime, and end_datetime for each token
+      const tokens = tokenData.results.map((token: { mintable: { start_datetime: string | number | Date; token_id: any; token_name: any; end_datetime: any; }; collection_address: any; }) => {
+          // Check if start_datetime falls from April 1st, 2024 onwards and end_datetime is null
+          const startDate = new Date('2024-04-01T00:00:00');
+          const tokenStartDate = new Date(token.mintable.start_datetime);
+
+          if (tokenStartDate >= startDate) {
+              return {
+                  collection_address: token.collection_address,
+                  token_id: token.mintable.token_id,
+                  token_name: token.mintable.token_name,
+                  start_datetime: token.mintable.start_datetime,
+                  end_datetime: token.mintable.end_datetime
+              };
+          } else {
+              return null; // Token does not meet the desired criteria
+          }
+      }).filter((token: null) => token !== null); // Filter out tokens that do not meet the desired criteria
+      
+      // Format the data as collection_address:token_id
+      const formattedTokens = tokens.map((token: { collection_address: any; token_id: any; }) => `${token.collection_address}:${token.token_id}`);
+      
+      console.log('formattedTokens:', formattedTokens);
+
+      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+      
+      // Make API request using the constructed URL
+      const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${formattedTokens.join('&tokens=')}`, {
+        headers: {
+          'accept': 'application/json',
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
+        },
+      });
+      
+      const userDataResponse = await responseUserData.json();
+
+      if (userDataResponse.tokens.length >= formattedTokens.length) {
+        qualified = true;
+        await stack.track("Mint - All 747 Airlines NFTs (made in April)", {
+          points: 747,
+          account: eth_addresses,
+          uniqueId: eth_addresses
+        });
+        console.log('User qualified');
+      } else {
+        console.log('User not qualified');
+      }
+    }  
 
     return c.res({
       image: (
@@ -254,13 +310,17 @@ app.frame('/second-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 2 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - All 747 Airlines NFTs (made in April) ]</p>
-          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
-          <p style={{ fontSize: 24 }}> Not qualified ❌</p>
+          {qualified ? (
+              <p style={{ fontSize: 24 }}> Completed ✅ </p>
+            ) : (
+              <p style={{ fontSize: 24 }}> Not qualified ❌</p>
+            )
+          }
         </div>
       ),
       intents: [
         <Button action='/first-quest'>⏪ Back</Button>,
-        <Button action='/second-quest'>🔄 Refresh</Button>,
+        <Button action='/second-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>⚡️ Mint</Button.Link>,  
         <Button action='/third-quest'>⏩️ Next</Button>,
       ],
@@ -339,7 +399,7 @@ app.frame('/third-quest', async (c) => {
       ),
       intents: [
         <Button action='/second-quest'>⏪ Back</Button>,
-        <Button action='/third-quest'>🔄 Refresh</Button>,
+        <Button action='/third-quest'>🔄 Check</Button>,
         <Button.Link href='https://zora.co/explore/crash'>⚡️ Mint</Button.Link>,  
         <Button action='/fourth-quest'>⏩️ Next</Button>,
       ],
