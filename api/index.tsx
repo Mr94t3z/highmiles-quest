@@ -429,7 +429,32 @@ app.frame('/fourth-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
-  
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    const tokenAddress = process.env.FOURTH_QUEST_TOKEN_ADDRESS || '';
+
+    // Get user tokens
+    const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${tokenAddress}`, {
+      headers: {
+        'accept': 'application/json',
+        'x-api-key': process.env.RESERVOIR_API_KEY || '',
+      },
+    });
+
+    const userDataResponse = await responseUserData.json();
+
+    if (userDataResponse.tokens.length > 0) {
+      await stack.track("Mint - Imagine x 747 Air NFT", {
+        points: 333,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log('User qualified!');
+    } else {
+      console.log('User not qualified!');
+    }
 
     return c.res({
       image: (
@@ -472,8 +497,11 @@ app.frame('/fourth-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 4 - 333 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Imagine x 747 Air NFT ]</p>
-          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
-          <p style={{ fontSize: 24 }}> Not qualified ❌</p>
+          {userDataResponse.tokens.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
         </div>
       ),
       intents: [
