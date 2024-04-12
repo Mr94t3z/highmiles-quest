@@ -5,8 +5,8 @@ import { StackClient } from "@stackso/js-core";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
-import { devtools } from 'frog/dev';
-import { serveStatic } from 'frog/serve-static';
+// import { devtools } from 'frog/dev';
+// import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -34,7 +34,7 @@ export const app = new Frog({
     ],    
   },
   // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
+  // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY || '' })
 })
 
 // Initialize the client
@@ -53,6 +53,7 @@ const baseUrlZora = process.env.BASE_URL_ZORA;
 // Chainbase API base URL
 const baseUrlChainbase = process.env.BASE_URL_CHAINBASE;
 
+// Initial frame
 app.frame('/', (c) => {
     return c.res({
       image: (
@@ -90,7 +91,6 @@ app.frame('/', (c) => {
     });
 });
 
-
 // First Quest
 app.frame('/first-quest', async (c) => {
   const { frameData } = c;
@@ -103,7 +103,7 @@ app.frame('/first-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -197,7 +197,6 @@ app.frame('/first-quest', async (c) => {
   }
 });
 
-
 // Second Quest
 app.frame('/second-quest', async (c) => {
   const { frameData } = c;
@@ -208,7 +207,7 @@ app.frame('/second-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -335,7 +334,6 @@ app.frame('/second-quest', async (c) => {
   }
 });
 
-
 // Third Quest - Skip
 app.frame('/third-quest', async (c) => {
   const { frameData } = c;
@@ -346,7 +344,7 @@ app.frame('/third-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -414,7 +412,6 @@ app.frame('/third-quest', async (c) => {
   }
 });
 
-
 // Fourth Quest
 app.frame('/fourth-quest', async (c) => {
   const { frameData } = c;
@@ -425,7 +422,7 @@ app.frame('/fourth-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -522,7 +519,6 @@ app.frame('/fourth-quest', async (c) => {
   }
 });
 
-
 // Fifth Quest - Skip
 app.frame('/fifth-quest', async (c) => {
   const { frameData } = c;
@@ -533,7 +529,7 @@ app.frame('/fifth-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -601,7 +597,6 @@ app.frame('/fifth-quest', async (c) => {
   }
 });
 
-
 // Sixth Quest
 app.frame('/sixth-quest', async (c) => {
   const { frameData } = c;
@@ -612,7 +607,7 @@ app.frame('/sixth-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -710,7 +705,6 @@ app.frame('/sixth-quest', async (c) => {
   }
 });
 
-
 // Seventh Quest
 app.frame('/seventh-quest', async (c) => {
   const { frameData } = c;
@@ -721,7 +715,7 @@ app.frame('/seventh-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -819,7 +813,6 @@ app.frame('/seventh-quest', async (c) => {
   }
 });
 
-
 // Eighth Quest
 app.frame('/eighth-quest', async (c) => {
   const { frameData } = c;
@@ -830,7 +823,7 @@ app.frame('/eighth-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -928,7 +921,6 @@ app.frame('/eighth-quest', async (c) => {
   }
 });
 
-
 // Ninth Quest
 app.frame('/ninth-quest', async (c) => {
   const { frameData } = c;
@@ -939,7 +931,7 @@ app.frame('/ninth-quest', async (c) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'api_key': 'NEYNAR_FROG_FM',
+        'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
 
@@ -1037,8 +1029,176 @@ app.frame('/ninth-quest', async (c) => {
   }
 });
 
+// Tenth Quest - Skip
+app.frame('/tenth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User connected wallet address
+    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+  
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 10 - 1500 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
+          {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )} */}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
+        <Button action='/tenth-quest'>🔄 Check</Button>,
+        <Button action='/ninth-quest'>⏪ Back</Button>,
+        <Button action='/eleventh-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
+// Eleventh Quest
+app.frame('/eleventh-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User connected wallet address
+    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+  
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 11 - 250 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Tip - Casts made in /747Air /higher / imagine /enjoy or /degen channels ]</p>
+          {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )} */}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://warpcast.com/~/compose?text=&embeds[]=https://highmiles-quest.vercel.app/api/april'>Cast ⌁</Button.Link>,
+        <Button action='/eleventh-quest'>🔄 Check</Button>,
+        <Button action='/tenth-quest'>⏪ Back</Button>,
+        <Button action='/twelfth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
 // Uncomment for local server testing
-devtools(app, { serveStatic });
+// devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
