@@ -1652,35 +1652,23 @@ app.frame('/16th-quest', async (c) => {
     const data = await response.json();
     const userData = data.users[0];
 
-    // // User must follow this channel - /747air
-    // const channelNeedToFollow = "747air";
+    // User display name
+    const name = userData.display_name;
 
-    // // Fetching channel data
-    // const responseChannel = await fetch(`${baseUrlNeynar}/channel?id=${channelNeedToFollow}&viewer_fid=${userData.fid}`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'accept': 'application/json',
-    //     'api_key': process.env.NEYNAR_API_KEY || '',
-    //   },
-    // });
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    // // Extracting user following status for the channel
-    // const channelData = (await responseChannel.json()).channel;
-    // const userFollowing = channelData.viewer_context.following;
+    if (name.includes('✈️')) {
+      await stack.track("Profile Cosmetic - Have the plane emoji in their Warpcast Display name", {
+        points: 747,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log("User has the plane emoji in their Warpcast Display name.");
+    } else {
+      console.log("User doesn't have the plane emoji in their Warpcast Display name.");
+    }
 
-    // // User connected wallet address
-    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
-
-    // if (userFollowing) {
-    //   await stack.track("Profile Cosmetic - Have the plane emoji in their Warpcast Display name", {
-    //     points: 474,
-    //     account: eth_addresses,
-    //     uniqueId: eth_addresses
-    //   });
-    //   console.log("User is following.");
-    // } else {
-    //   console.log("User is not following.");
-    // }
 
     return c.res({
       image: (
@@ -1723,11 +1711,11 @@ app.frame('/16th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 16 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Profile Cosmetic - Have the plane emoji in their Warpcast Display name ]</p>
-          {/* {userFollowing ? (
+          {name.includes('✈️') ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )} */}
+          )}
         </div>
       ),
       intents: [
