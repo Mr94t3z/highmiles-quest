@@ -1164,7 +1164,6 @@ app.frame('/eleventh-quest', async (c) => {
         console.log('User not casting in this channel!');
       }
     });
-  
 
     return c.res({
       image: (
@@ -1228,6 +1227,302 @@ app.frame('/eleventh-quest', async (c) => {
     });
   }
 });
+
+// Twelfth Quest - Skip
+app.frame('/twelfth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // // User connected wallet address
+    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+
+    // stack.track("Buy 1 - 747 Gear from Warpshop Frames", {
+    //   points: 747,
+    //   account: eth_addresses,
+    //   uniqueId: eth_addresses
+    // });
+
+    // stack.track("Buy 2 - 747 Gear from Warpshop Frames", {
+    //   points: 747,
+    //   account: eth_addresses,
+    //   uniqueId: eth_addresses
+    // });
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 12 - 747 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
+          {/* {castData && castData.some(data => data.result.casts.length > 0) ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )} */}
+        </div>
+      ),
+      intents: [
+        <Button.Link href=''>Buy ⌁</Button.Link>,
+        <Button action='/twelfth-quest'>🔄 Check</Button>,
+        <Button action='/eleventh-quest'>⏪ Back</Button>,
+        <Button action='/thirteenth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
+// Thirteenth Quest - Skip
+app.frame('/thirteenth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // // User connected wallet address
+    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+
+    // stack.track("Follow - 747 Air on Orb", {
+    //   points: 474,
+    //   account: eth_addresses,
+    //   uniqueId: eth_addresses
+    // });
+
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 13 - 474 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Follow - 747 Air on Orb ]</p>
+          {/* {castData && castData.some(data => data.result.casts.length > 0) ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )} */}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://orb.club/@747'>Follow ⌁</Button.Link>,
+        <Button action='/thirteenth-quest'>🔄 Check</Button>,
+        <Button action='/twelfth-quest'>⏪ Back</Button>,
+        <Button action='/fourteenth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
+// Fourteenth Quest
+app.frame('/fourteenth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User must follow this fid - @boeing747
+    const fidNeedToFollow = "388965";
+
+    const responseUserFollowing = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fidNeedToFollow}&viewer_fid=${userData.fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const userIsFollow = await responseUserFollowing.json();
+    const userFollowing = userIsFollow.users[0].viewer_context.following;
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    if (userFollowing) {
+      await stack.track("Follow - 747 Air on Warpcast", {
+        points: 474,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log("User is following.");
+    } else {
+      console.log("User is not following.");
+    }
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 14 - 474 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Follow - 747 Air on Warpcast ]</p>
+          {userFollowing ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://warpcast.com/boeing747'>Follow ⌁</Button.Link>,
+        <Button action='/fourteenth-quest'>🔄 Check</Button>,
+        <Button action='/thirteenth-quest'>⏪ Back</Button>,
+        <Button action='/fifteenth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
 
 // Uncomment for local server testing
 devtools(app, { serveStatic });
