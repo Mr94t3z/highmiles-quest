@@ -405,7 +405,7 @@ app.frame('/3rd-quest', async (c) => {
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    // List NFTs can be minted with $crash
+    // List of NFTs that can be minted with $crash
     const tokens = [
       '0x6EDed07dd3E9a3215a005eB4E588adF1810B77BC:4',
       '0xB704c29279664F873Dc138e16389C8152A132269:3',
@@ -720,34 +720,16 @@ app.frame('/6th-quest', async (c) => {
 
     const userDataResponse = await responseUserData.json();
 
-    if (userDataResponse.tokens && userDataResponse.tokens.length > 0) {
-      const tokenCount = parseInt(userDataResponse.tokens[0].ownership.tokenCount);
-      if (!isNaN(tokenCount) && tokenCount > 0 && tokenCount <= 10) {
-        const trackMessage = `Mint ${tokenCount} - Destinations! Boarding Pass`;
-        
-        await stack.track(trackMessage, {
-          points: tokenCount * 2000,
-          account: eth_addresses,
-          uniqueId: eth_addresses
-        });
-        console.log(`User qualified with ${tokenCount} tokens! Total points earned: ${tokenCount * 2000}`);
-      } else {
-        console.log('Invalid token count or out of range (must be between 1 and 10).');
-      }
+    if (userDataResponse.tokens.length > 0) {
+      await stack.track("Mint - Destinations! Boarding Pass", {
+        points: 2000,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log('User qualified!');
     } else {
-      console.log('No tokens found for the user.');
+      console.log('User not qualified!');
     }
-
-    // if (userDataResponse.tokens.length > 0) {
-    //   await stack.track("Mint - Destinations! Boarding Pass", {
-    //     points: 2000,
-    //     account: eth_addresses,
-    //     uniqueId: eth_addresses
-    //   });
-    //   console.log('User qualified!');
-    // } else {
-    //   console.log('User not qualified!');
-    // }
 
     return c.res({
       image: (
