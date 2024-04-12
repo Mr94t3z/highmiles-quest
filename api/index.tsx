@@ -4,8 +4,8 @@ import { StackClient } from "@stackso/js-core";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
-// import { devtools } from 'frog/dev';
-// import { serveStatic } from 'frog/serve-static';
+import { devtools } from 'frog/dev';
+import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -853,7 +853,7 @@ app.frame('/7th-quest', async (c) => {
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x38e540ca0315bd0de92ed7c4429418bf51826549'>Swap ⌁</Button.Link>,
         <Button action='/7th-quest'>🔄 Check</Button>,
         <Button action='/6th-quest'>⏪ Back</Button>,
-        <Button action='/eighth-quest'>⏩️ Next</Button>,
+        <Button action='/8th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -864,8 +864,8 @@ app.frame('/7th-quest', async (c) => {
   }
 });
 
-// Eighth Quest
-app.frame('/eighth-quest', async (c) => {
+// 8th Quest
+app.frame('/8th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -959,7 +959,7 @@ app.frame('/eighth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0xbb769d7a13e3f10957741b2b13e6c2c4c67908fa'>Swap ⌁</Button.Link>,
-        <Button action='/eighth-quest'>🔄 Check</Button>,
+        <Button action='/8th-quest'>🔄 Check</Button>,
         <Button action='/7th-quest'>⏪ Back</Button>,
         <Button action='/9th-quest'>⏩️ Next</Button>,
       ],
@@ -1068,7 +1068,7 @@ app.frame('/9th-quest', async (c) => {
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x621e87af48115122cd96209f820fe0445c2ea90e'>Swap ⌁</Button.Link>,
         <Button action='/9th-quest'>🔄 Check</Button>,
-        <Button action='/eighth-quest'>⏪ Back</Button>,
+        <Button action='/8th-quest'>⏪ Back</Button>,
         <Button action='/10th-quest'>⏩️ Next</Button>,
       ],
     });
@@ -1362,7 +1362,7 @@ app.frame('/12th-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button.Link href=''>Buy ⌁</Button.Link>,
+        <Button.Link href='https://github.com/Mr94t3z/storage-farcaster-gift/tree/master?tab=readme-ov-file'>Buy ⌁</Button.Link>,
         <Button action='/12th-quest'>🔄 Check</Button>,
         <Button action='/11th-quest'>⏪ Back</Button>,
         <Button action='/13th-quest'>⏩️ Next</Button>,
@@ -1868,7 +1868,7 @@ app.frame('/check-points', async (c) => {
 
 
 // Uncomment for local server testing
-// devtools(app, { serveStatic });
+devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
