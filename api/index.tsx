@@ -1,12 +1,11 @@
 import { Button, Frog } from 'frog'
-// import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
 import { StackClient } from "@stackso/js-core";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
-// import { devtools } from 'frog/dev';
-// import { serveStatic } from 'frog/serve-static';
+import { devtools } from 'frog/dev';
+import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -1130,8 +1129,41 @@ app.frame('/eleventh-quest', async (c) => {
     const data = await response.json();
     const userData = data.users[0];
 
+    // List of channels
+    const channels = ["/747air", "/higher", "/imagine", "/enjoy", "/degen"];
+
+    const links = channels.map(channel => "https://warpcast.com/~/channel" + channel);
+
+    const castResponses = await Promise.all(links.map(link => {
+      return fetch(`https://api.neynar.com/v1/farcaster/casts?fid=${userData.fid}&parent_url=${encodeURIComponent(link)}&viewerFid=${userData.fid}&limit=1`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'api_key': process.env.NEYNAR_API_KEY || '',
+        }
+      });
+    }));
+
+    const castData = await Promise.all(castResponses.map(response => response.json()));
+
     // User connected wallet address
-    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // Process each cast data
+    castData.forEach((data) => {
+      const casts = data.result.casts;
+      if (casts.length > 0) {
+        const channel = casts[0].parentUrl;
+        stack.track("Tip - Casts made in /747Air /higher /imagine /enjoy or /degen channels", {
+          points: 250,
+          account: eth_addresses,
+          uniqueId: eth_addresses
+        });
+        console.log('User qualified, found cast in -', channel);
+      } else {
+        console.log('User not casting in this channel!');
+      }
+    });
   
 
     return c.res({
@@ -1174,12 +1206,12 @@ app.frame('/eleventh-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 250 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Tip - Casts made in /747Air /higher / imagine /enjoy or /degen channels ]</p>
-          {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+          <p style={{ margin : 0 }}>[ Tip - Casts made in /747Air /higher /imagine /enjoy or /degen channels ]</p>
+          {castData && castData.some(data => data.result.casts.length > 0) ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )} */}
+          )}
         </div>
       ),
       intents: [
@@ -1198,7 +1230,7 @@ app.frame('/eleventh-quest', async (c) => {
 });
 
 // Uncomment for local server testing
-// devtools(app, { serveStatic });
+devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
