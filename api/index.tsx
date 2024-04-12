@@ -819,6 +819,115 @@ app.frame('/seventh-quest', async (c) => {
   }
 });
 
+
+// Eighth Quest
+app.frame('/eighth-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': 'NEYNAR_FROG_FM',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // Contract address
+    const contractAddress = process.env.EIGHTH_QUEST_SMART_CONTRACT_ADDRESS || '';
+
+    // Get token transfers by contract from 1 - 28 April 2024 
+    const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
+      headers: {
+        'accept': 'application/json',
+        'x-api-key': process.env.BASECHAIN_API_KEY || '',
+      },
+    });
+
+    const userDataResponse = await responseUserData.json();
+
+    if (userDataResponse && userDataResponse.data && userDataResponse.data.length > 0) {
+      await stack.track("Swap - (any token) for $NYC", {
+        points: 250,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log('User qualified!');
+    } else {
+      console.log('User not qualified!');
+    }
+  
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 8 - 250 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Swap - (any token) for $NYC ]</p>
+          {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://app.uniswap.org/explore/tokens/base/0xbb769d7a13e3f10957741b2b13e6c2c4c67908fa'>Swap ⌁</Button.Link>,
+        <Button action='/eighth-quest'>🔄 Check</Button>,
+        <Button action='/seventh-quest'>⏪ Back</Button>,
+        <Button action='/ninth-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
 // Uncomment for local server testing
 devtools(app, { serveStatic });
 
