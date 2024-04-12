@@ -8,6 +8,7 @@
     "deploy": "vercel"
   },
   "dependencies": {
+    "@airstack/node": "^0.0.6",
     "@neynar/nodejs-sdk": "^1.15.0",
     "@stackso/js-core": "^0.2.21",
     "dotenv": "^16.4.5",

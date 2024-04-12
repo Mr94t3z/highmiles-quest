@@ -385,7 +385,7 @@ app.frame('/2nd-quest', async (c) => {
   }
 });
 
-// 3rd Quest - Skip
+// 3rd Quest
 app.frame('/3rd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
@@ -401,7 +401,43 @@ app.frame('/3rd-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
-  
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // List NFTs can be minted with $crash
+    const tokens = [
+      '0x6EDed07dd3E9a3215a005eB4E588adF1810B77BC:4',
+      '0xB704c29279664F873Dc138e16389C8152A132269:3',
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:3',
+      '0x72AA38D5fc500eD2910ed29ac8B8A79a84607500:1',
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:1',
+      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:47',
+      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:46',
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:2',
+      '0xd2Fdd31E00826B0a11678d87f791fB4ae84c2809:2'
+    ];
+
+    // Fetch user tokens
+    const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=` + tokens.join('&tokens='), {
+      headers: {
+          'accept': 'application/json',
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
+      },
+    });
+
+    const userDataResponse = await responseUserData.json();
+    
+    if (userDataResponse.tokens.length > 0) {
+      await stack.track("Mint - At least 1 747 Airlines NFT (in $crash)", {
+        points: 500,
+        account: eth_addresses,
+        uniqueId: eth_addresses
+      });
+      console.log("User qualified");
+    } else {
+      console.log("User not qualified");
+    }
 
     return c.res({
       image: (
@@ -444,8 +480,11 @@ app.frame('/3rd-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 3 - 500 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - At least 1 747 Airlines NFT (in $crash) ]</p>
-          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
-          <p style={{ fontSize: 24 }}> Not qualified ❌</p>
+          {userDataResponse.tokens.length > 0 ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )}
         </div>
       ),
       intents: [
@@ -681,17 +720,34 @@ app.frame('/6th-quest', async (c) => {
 
     const userDataResponse = await responseUserData.json();
 
-    if (userDataResponse.tokens.length > 0) {
-      await stack.track("Mint - Destinations! Boarding Pass", {
-        points: 2000,
-        account: eth_addresses,
-        uniqueId: eth_addresses
-      });
-      console.log('User qualified!');
+    if (userDataResponse.tokens && userDataResponse.tokens.length > 0) {
+      const tokenCount = parseInt(userDataResponse.tokens[0].ownership.tokenCount);
+      if (!isNaN(tokenCount) && tokenCount > 0 && tokenCount <= 10) {
+        const trackMessage = `Mint ${tokenCount} - Destinations! Boarding Pass`;
+        
+        await stack.track(trackMessage, {
+          points: tokenCount * 2000,
+          account: eth_addresses,
+          uniqueId: eth_addresses
+        });
+        console.log(`User qualified with ${tokenCount} tokens! Total points earned: ${tokenCount * 2000}`);
+      } else {
+        console.log('Invalid token count or out of range (must be between 1 and 10).');
+      }
     } else {
-      console.log('User not qualified!');
+      console.log('No tokens found for the user.');
     }
-  
+
+    // if (userDataResponse.tokens.length > 0) {
+    //   await stack.track("Mint - Destinations! Boarding Pass", {
+    //     points: 2000,
+    //     account: eth_addresses,
+    //     uniqueId: eth_addresses
+    //   });
+    //   console.log('User qualified!');
+    // } else {
+    //   console.log('User not qualified!');
+    // }
 
     return c.res({
       image: (
@@ -1709,7 +1765,7 @@ app.frame('/16th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     if (name.includes('✈️')) {
-      await stack.track("Profile Cosmetic - Have the plane emoji in their Warpcast Display name", {
+      await stack.track("Profile Cosmetic - Have the plane ✈️ emoji in Warpcast display name", {
         points: 747,
         account: eth_addresses,
         uniqueId: eth_addresses
@@ -1760,7 +1816,7 @@ app.frame('/16th-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 16 - 747 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Profile Cosmetic - Have the plane emoji in their Warpcast Display name ]</p>
+          <p style={{ margin : 0 }}>[ Profile Cosmetic - Have the plane ✈️ emoji in Warpcast display name ]</p>
           {name.includes('✈️') ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
