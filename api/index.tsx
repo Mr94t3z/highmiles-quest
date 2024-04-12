@@ -1848,9 +1848,26 @@ app.frame('/check-points', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
+          {rank? (
           <p style={{ fontSize: 30 }}>Rank #{rank} 🏁</p>
+          ) : (
+            <p></p>
+          )}
+          {total_point? (
           <p style={{ margin : 0 }}>[ You've collected {total_point} points 🎖️ ]</p>
-          <p style={{ fontSize: 24}}>Thank you for your participation in the HighMiles© {questMonth} Quest!</p>
+          ) : (
+            <p></p>
+          )}
+          {rank && total_point? (
+            <p style={{ fontSize: 24}}>Thank you for your participation in the HighMiles© {questMonth} Quest!</p>
+          ) : (
+            <p></p>
+          )}
+          {!rank && !total_point? (
+          <p>[ You need to complete at least 1 task. ]</p>
+          ) : (
+            <p></p>
+          )}
         </div>
       ),
       intents: [
