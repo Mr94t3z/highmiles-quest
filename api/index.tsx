@@ -84,14 +84,14 @@ app.frame('/', (c) => {
         </div>
       ),
       intents: [
-        <Button action='/first-quest'>🏁 Start Quest</Button>,
+        <Button action='/1st-quest'>🏁 Start Quest</Button>,
         <Button.Link href='https://warpcast.com/~/channel/747air'>✈️ Follow Channel</Button.Link>
       ],
     });
 });
 
-// First Quest
-app.frame('/first-quest', async (c) => {
+// 1st Quest
+app.frame('/1st-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -183,9 +183,9 @@ app.frame('/first-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⌁</Button.Link>,
-        <Button action='/first-quest'>🔄 Check</Button>,
+        <Button action='/1st-quest'>🔄 Check</Button>,
         <Button action='/'>⏪ Back</Button>,
-        <Button action='/second-quest'>⏩️ Next</Button>,
+        <Button action='/2nd-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -196,8 +196,8 @@ app.frame('/first-quest', async (c) => {
   }
 });
 
-// Second Quest
-app.frame('/second-quest', async (c) => {
+// 2nd Quest
+app.frame('/2nd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -320,9 +320,9 @@ app.frame('/second-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>Mint ⌁</Button.Link>,
-        <Button action='/second-quest'>🔄 Check</Button>,
-        <Button action='/first-quest'>⏪ Back</Button>,  
-        <Button action='/third-quest'>⏩️ Next</Button>,
+        <Button action='/2nd-quest'>🔄 Check</Button>,
+        <Button action='/1st-quest'>⏪ Back</Button>,  
+        <Button action='/3rd-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -333,8 +333,8 @@ app.frame('/second-quest', async (c) => {
   }
 });
 
-// Third Quest - Skip
-app.frame('/third-quest', async (c) => {
+// 3rd Quest - Skip
+app.frame('/3rd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -398,9 +398,9 @@ app.frame('/third-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
-        <Button action='/third-quest'>🔄 Check</Button>,
-        <Button action='/second-quest'>⏪ Back</Button>,
-        <Button action='/fourth-quest'>⏩️ Next</Button>,
+        <Button action='/3rd-quest'>🔄 Check</Button>,
+        <Button action='/2nd-quest'>⏪ Back</Button>,
+        <Button action='/4th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -411,8 +411,8 @@ app.frame('/third-quest', async (c) => {
   }
 });
 
-// Fourth Quest
-app.frame('/fourth-quest', async (c) => {
+// 4th Quest
+app.frame('/4th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -505,9 +505,9 @@ app.frame('/fourth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b/53'>Mint ⌁</Button.Link>,
-        <Button action='/fourth-quest'>🔄 Check</Button>,
-        <Button action='/third-quest'>⏪ Back</Button>,
-        <Button action='/fifth-quest'>⏩️ Next</Button>,
+        <Button action='/4th-quest'>🔄 Check</Button>,
+        <Button action='/3rd-quest'>⏪ Back</Button>,
+        <Button action='/5th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -518,8 +518,8 @@ app.frame('/fourth-quest', async (c) => {
   }
 });
 
-// Fifth Quest - Skip
-app.frame('/fifth-quest', async (c) => {
+// 5th Quest - Skip
+app.frame('/5th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -583,9 +583,9 @@ app.frame('/fifth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
-        <Button action='/fifth-quest'>🔄 Check</Button>,
-        <Button action='/fourth-quest'>⏪ Back</Button>,
-        <Button action='/sixth-quest'>⏩️ Next</Button>,
+        <Button action='/5th-quest'>🔄 Check</Button>,
+        <Button action='/4th-quest'>⏪ Back</Button>,
+        <Button action='/6th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -596,8 +596,8 @@ app.frame('/fifth-quest', async (c) => {
   }
 });
 
-// Sixth Quest
-app.frame('/sixth-quest', async (c) => {
+// 6th Quest
+app.frame('/6th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -691,9 +691,9 @@ app.frame('/sixth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xcd6a95bf6c52a76f75049024b3660307b0078fef/2'>Mint ⌁</Button.Link>,
-        <Button action='/sixth-quest'>🔄 Check</Button>,
-        <Button action='/fifth-quest'>⏪ Back</Button>,
-        <Button action='/seventh-quest'>⏩️ Next</Button>,
+        <Button action='/6th-quest'>🔄 Check</Button>,
+        <Button action='/5th-quest'>⏪ Back</Button>,
+        <Button action='/7th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -704,8 +704,8 @@ app.frame('/sixth-quest', async (c) => {
   }
 });
 
-// Seventh Quest
-app.frame('/seventh-quest', async (c) => {
+// 7th Quest
+app.frame('/7th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -799,8 +799,8 @@ app.frame('/seventh-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x38e540ca0315bd0de92ed7c4429418bf51826549'>Swap ⌁</Button.Link>,
-        <Button action='/seventh-quest'>🔄 Check</Button>,
-        <Button action='/sixth-quest'>⏪ Back</Button>,
+        <Button action='/7th-quest'>🔄 Check</Button>,
+        <Button action='/6th-quest'>⏪ Back</Button>,
         <Button action='/eighth-quest'>⏩️ Next</Button>,
       ],
     });
@@ -908,8 +908,8 @@ app.frame('/eighth-quest', async (c) => {
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0xbb769d7a13e3f10957741b2b13e6c2c4c67908fa'>Swap ⌁</Button.Link>,
         <Button action='/eighth-quest'>🔄 Check</Button>,
-        <Button action='/seventh-quest'>⏪ Back</Button>,
-        <Button action='/ninth-quest'>⏩️ Next</Button>,
+        <Button action='/7th-quest'>⏪ Back</Button>,
+        <Button action='/9th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -920,8 +920,8 @@ app.frame('/eighth-quest', async (c) => {
   }
 });
 
-// Ninth Quest
-app.frame('/ninth-quest', async (c) => {
+// 9th Quest
+app.frame('/9th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1015,9 +1015,9 @@ app.frame('/ninth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x621e87af48115122cd96209f820fe0445c2ea90e'>Swap ⌁</Button.Link>,
-        <Button action='/ninth-quest'>🔄 Check</Button>,
+        <Button action='/9th-quest'>🔄 Check</Button>,
         <Button action='/eighth-quest'>⏪ Back</Button>,
-        <Button action='/tenth-quest'>⏩️ Next</Button>,
+        <Button action='/10th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1028,8 +1028,8 @@ app.frame('/ninth-quest', async (c) => {
   }
 });
 
-// Tenth Quest - Skip
-app.frame('/tenth-quest', async (c) => {
+// 10th Quest - Skip
+app.frame('/10th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1099,9 +1099,9 @@ app.frame('/tenth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
-        <Button action='/tenth-quest'>🔄 Check</Button>,
-        <Button action='/ninth-quest'>⏪ Back</Button>,
-        <Button action='/eleventh-quest'>⏩️ Next</Button>,
+        <Button action='/10th-quest'>🔄 Check</Button>,
+        <Button action='/9th-quest'>⏪ Back</Button>,
+        <Button action='/11th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1112,8 +1112,8 @@ app.frame('/tenth-quest', async (c) => {
   }
 });
 
-// Eleventh Quest
-app.frame('/eleventh-quest', async (c) => {
+// 11th Quest
+app.frame('/11th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1205,7 +1205,7 @@ app.frame('/eleventh-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 250 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Tip - Casts made in /747Air /higher /imagine /enjoy or /degen channels ]</p>
+          <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels ]</p>
           {castData && castData.some(data => data.result.casts.length > 0) ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
@@ -1215,9 +1215,9 @@ app.frame('/eleventh-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/compose?text=&embeds[]=https://highmiles-quest.vercel.app/api/april'>Cast ⌁</Button.Link>,
-        <Button action='/eleventh-quest'>🔄 Check</Button>,
-        <Button action='/tenth-quest'>⏪ Back</Button>,
-        <Button action='/twelfth-quest'>⏩️ Next</Button>,
+        <Button action='/11th-quest'>🔄 Check</Button>,
+        <Button action='/10th-quest'>⏪ Back</Button>,
+        <Button action='/12th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1228,8 +1228,8 @@ app.frame('/eleventh-quest', async (c) => {
   }
 });
 
-// Twelfth Quest - Skip
-app.frame('/twelfth-quest', async (c) => {
+// 12th Quest - Skip
+app.frame('/12th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1311,9 +1311,9 @@ app.frame('/twelfth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href=''>Buy ⌁</Button.Link>,
-        <Button action='/twelfth-quest'>🔄 Check</Button>,
-        <Button action='/eleventh-quest'>⏪ Back</Button>,
-        <Button action='/thirteenth-quest'>⏩️ Next</Button>,
+        <Button action='/12th-quest'>🔄 Check</Button>,
+        <Button action='/11th-quest'>⏪ Back</Button>,
+        <Button action='/13th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1324,8 +1324,8 @@ app.frame('/twelfth-quest', async (c) => {
   }
 });
 
-// Thirteenth Quest - Skip
-app.frame('/thirteenth-quest', async (c) => {
+// 13th Quest - Skip
+app.frame('/13th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1402,9 +1402,9 @@ app.frame('/thirteenth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://orb.club/@747'>Follow ⌁</Button.Link>,
-        <Button action='/thirteenth-quest'>🔄 Check</Button>,
-        <Button action='/twelfth-quest'>⏪ Back</Button>,
-        <Button action='/fourteenth-quest'>⏩️ Next</Button>,
+        <Button action='/13th-quest'>🔄 Check</Button>,
+        <Button action='/12th-quest'>⏪ Back</Button>,
+        <Button action='/14th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1415,8 +1415,8 @@ app.frame('/thirteenth-quest', async (c) => {
   }
 });
 
-// Fourteenth Quest
-app.frame('/fourteenth-quest', async (c) => {
+// 14th Quest
+app.frame('/14th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1510,9 +1510,118 @@ app.frame('/fourteenth-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/boeing747'>Follow ⌁</Button.Link>,
-        <Button action='/fourteenth-quest'>🔄 Check</Button>,
-        <Button action='/thirteenth-quest'>⏪ Back</Button>,
-        <Button action='/fifteenth-quest'>⏩️ Next</Button>,
+        <Button action='/14th-quest'>🔄 Check</Button>,
+        <Button action='/13th-quest'>⏪ Back</Button>,
+        <Button action='/15th-quest'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
+
+// 15th Quest
+app.frame('/15th-quest', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // // User must follow this channel - /747air
+    // const channelNeedToFollow = "388965";
+
+    // const responseUserFollowing = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fidNeedToFollow}&viewer_fid=${userData.fid}`, {
+    //   method: 'GET',
+    //   headers: {
+    //     'accept': 'application/json',
+    //     'api_key': process.env.NEYNAR_API_KEY || '',
+    //   },
+    // });
+
+    // const userIsFollow = await responseUserFollowing.json();
+    // const userFollowing = userIsFollow.users[0].viewer_context.following;
+
+    // // User connected wallet address
+    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // if (userFollowing) {
+    //   await stack.track("Follow - 747 Air Channel on Warpcast", {
+    //     points: 474,
+    //     account: eth_addresses,
+    //     uniqueId: eth_addresses
+    //   });
+    //   console.log("User is following.");
+    // } else {
+    //   console.log("User is not following.");
+    // }
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Task 15 - 474 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Follow - 747 Air Channel on Warpcast ]</p>
+          {/* {userFollowing ? (
+            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          ) : (
+            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+          )} */}
+        </div>
+      ),
+      intents: [
+        <Button.Link href='https://warpcast.com/~/channel/747air'>Follow ⌁</Button.Link>,
+        <Button action='/15th-quest'>🔄 Check</Button>,
+        <Button action='/14th-quest'>⏪ Back</Button>,
+        <Button action='/15th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
