@@ -43,6 +43,16 @@ const stack = new StackClient({
   pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
 });
 
+// Get the current date
+const currentDate = new Date();
+// Set the start dates of the range
+const startDateString = process.env.QUEST_START_DATE || '';
+// Set the end dates of the range
+const endDateString = process.env.QUEST_END_DATE || '';
+// Convert the start date string to a Date object
+const startDate = new Date(startDateString);
+// Get the month name from the start date
+const questMonth = startDate.toLocaleString('default', { month: 'long' });
 // Neynar API base URL
 const baseUrlNeynar = process.env.BASE_URL_NEYNAR;
 // Reservoir API base URL
@@ -51,43 +61,85 @@ const baseUrlReservoir = process.env.BASE_URL_RESEVOIR;
 const baseUrlZora = process.env.BASE_URL_ZORA;
 // Chainbase API base URL
 const baseUrlChainbase = process.env.BASE_URL_CHAINBASE;
+// Leaderboard URL
+const leaderboardUrl = process.env.PUBLIC_URL_HIGHMILES_QUEST_LEADERBOARD;
 
 // Initial frame
 app.frame('/', (c) => {
-    return c.res({
-      image: (
-        <div
-          style={{
-            alignItems: 'center',
-            background: '#1A30FF',
-            backgroundSize: '100% 100%',
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'nowrap',
-            height: '100%',
-            justifyContent: 'center',
-            textAlign: 'center',
-            width: '100%',
-            color: 'white',
-            fontFamily: 'Space Mono',
-            fontSize: 35,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 0,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          <p>Hi Passengers! 👨🏻‍✈️</p>
-          Welcome to HighMiles© Quest! ✈️
-        </div>
-      ),
-      intents: [
-        <Button action='/1st-quest'>🏁 Start Quest</Button>,
-        <Button.Link href='https://warpcast.com/~/channel/747air'>✈️ Follow Channel</Button.Link>
-      ],
-    });
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+    // Check if the current date is within the range
+    if (currentDate >= startDate && currentDate <= endDate) {
+      return c.res({
+          image: (
+              <div
+                  style={{
+                      alignItems: 'center',
+                      background: '#1A30FF',
+                      backgroundSize: '100% 100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexWrap: 'nowrap',
+                      height: '100%',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '100%',
+                      color: 'white',
+                      fontFamily: 'Space Mono',
+                      fontSize: 35,
+                      fontStyle: 'normal',
+                      letterSpacing: '-0.025em',
+                      lineHeight: 1.4,
+                      marginTop: 0,
+                      padding: '0 120px',
+                      whiteSpace: 'pre-wrap',
+                  }}
+              >
+                  <p>Hi Passengers! 👨🏻‍✈️</p>
+                  Welcome to HighMiles© {questMonth} Quest! ✈️
+              </div>
+          ),
+          intents: [
+              <Button action='/1st-quest'>🏁 Start Quest</Button>,
+              <Button.Link href='https://warpcast.com/~/channel/747air'>✈️ Follow Channel</Button.Link>
+          ],
+      });
+    } else {
+      return c.res({
+          image: (
+              <div
+                  style={{
+                      alignItems: 'center',
+                      background: '#1A30FF',
+                      backgroundSize: '100% 100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexWrap: 'nowrap',
+                      height: '100%',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '100%',
+                      color: 'white',
+                      fontFamily: 'Space Mono',
+                      fontSize: 35,
+                      fontStyle: 'normal',
+                      letterSpacing: '-0.025em',
+                      lineHeight: 1.4,
+                      marginTop: 0,
+                      padding: '0 120px',
+                      whiteSpace: 'pre-wrap',
+                  }}
+              >
+                  <p>Hi Passengers! 👨🏻‍✈️</p>
+                  HighMiles© {questMonth} Quest already ended :(
+              </div>
+          ),
+          intents: [
+              <Button action='/check-points'>🏁 Start Quest</Button>,
+              <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
+          ],
+      });
+    }
 });
 
 // 1st Quest
@@ -1523,7 +1575,6 @@ app.frame('/14th-quest', async (c) => {
   }
 });
 
-
 // 15th Quest
 app.frame('/15th-quest', async (c) => {
   const { frameData } = c;
@@ -1634,7 +1685,6 @@ app.frame('/15th-quest', async (c) => {
   }
 });
 
-
 // 16th Quest
 app.frame('/16th-quest', async (c) => {
   const { frameData } = c;
@@ -1723,6 +1773,89 @@ app.frame('/16th-quest', async (c) => {
         <Button action='/16th-quest'>🔄 Check</Button>,
         <Button action='/15th-quest'>⏪ Back</Button>,
         <Button action='/check-points'>⏩️ Next</Button>,
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return c.res({
+      image: <div style={{ color: 'red' }}>An error occurred.</div>,
+    });
+  }
+});
+
+// Check Points
+app.frame('/check-points', async (c) => {
+  const { frameData } = c;
+  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  try {
+    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const data = await response.json();
+    const userData = data.users[0];
+
+    // User connected wallet address
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    const point = await stack.getLeaderboardRank(eth_addresses);
+
+    const rank = point.rank;
+
+    const total_point = point.points;
+
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+              }}
+              width={200} 
+              height={200} 
+            />
+            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+          </div>
+          <p style={{ fontSize: 30 }}>Rank #{rank} 🏁</p>
+          <p style={{ margin : 0 }}>[ You've collected {total_point} points 🎖️ ]</p>
+          <p style={{ fontSize: 24}}>Thank you for your participation in the HighMiles© {questMonth} Quest!</p>
+        </div>
+      ),
+      intents: [
+        <Button action='/'>🏁 Home</Button>,
+        <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>,
       ],
     });
   } catch (error) {
