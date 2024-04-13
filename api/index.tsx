@@ -1413,11 +1413,11 @@ app.frame('/11th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
-          {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
+          {/* {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )}
+          )} */}
         </div>
       ),
       intents: [
