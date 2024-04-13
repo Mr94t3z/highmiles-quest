@@ -1273,104 +1273,104 @@ app.frame('/11th-quest', async (c) => {
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    // const targetAddress = process.env.COINBASE_COMMERCE_WALLET_ADDRESS || '';
+    const targetAddress = process.env.COINBASE_COMMERCE_WALLET_ADDRESS || '';
 
-    // // Function to extract wallet addresses from all topics in a log
-    // function parseAddressesFromTopics(log: { topics: any[]; }) {
-    //   const addresses: string[] = [];
-    //   log.topics.forEach(topic => {
-    //     addresses.push(`0x${topic.slice(26)}`); // Slice the topic to get the address
-    //   });
-    //   return addresses;
-    // }
+    // Function to extract wallet addresses from all topics in a log
+    function parseAddressesFromTopics(log: { topics: any[]; }) {
+      const addresses: string[] = [];
+      log.topics.forEach(topic => {
+        addresses.push(`0x${topic.slice(26)}`); // Slice the topic to get the address
+      });
+      return addresses;
+    }
 
-    // let qualifiedTransactions: any[] = [];
+    let qualifiedTransactions: any[] = [];
 
-    // // Function to fetch transaction data from Tatum API
-    // async function getTransactionData(hash: string) {
-    //   try {
-    //     const resp = await fetch(
-    //       `https://api.tatum.io/v3/base/transaction/${hash}`,
-    //       {
-    //         method: 'GET',
-    //         headers: {
-    //           'x-api-key': process.env.TATUM_API_KEY || '',
-    //         }
-    //       }
-    //     );
+    // Function to fetch transaction data from Tatum API
+    async function getTransactionData(hash: string) {
+      try {
+        const resp = await fetch(
+          `https://api.tatum.io/v3/base/transaction/${hash}`,
+          {
+            method: 'GET',
+            headers: {
+              'x-api-key': process.env.TATUM_API_KEY || '',
+            }
+          }
+        );
     
-    //     if (resp.ok) {
-    //       const data = await resp.json(); // Parse response as JSON
-    //       const logs = data.logs || []; // Extract logs field, or default to an empty array if logs are not available
+        if (resp.ok) {
+          const data = await resp.json(); // Parse response as JSON
+          const logs = data.logs || []; // Extract logs field, or default to an empty array if logs are not available
     
-    //       // Parse all logs, filter, and extract addresses from all topics for logs that match the target address
-    //       const matchingLogs = logs.filter((log: { topics: any[]; }) => parseAddressesFromTopics(log).includes(targetAddress));
+          // Parse all logs, filter, and extract addresses from all topics for logs that match the target address
+          const matchingLogs = logs.filter((log: { topics: any[]; }) => parseAddressesFromTopics(log).includes(targetAddress));
           
-    //       if (matchingLogs.length > 0) {
-    //         return { hash, qualified: true };
-    //       } else {
-    //         return { hash, qualified: false };
-    //       }
-    //     } else {
-    //       console.error(`Failed to fetch transaction data for hash ${hash}:`, resp.statusText);
-    //       return { hash, qualified: false };
-    //     }
-    //   } catch (error) {
-    //     console.error(`Error fetching transaction data for hash ${hash}:`, error);
-    //     return { hash, qualified: false };
-    //   }
-    // }
+          if (matchingLogs.length > 0) {
+            return { hash, qualified: true };
+          } else {
+            return { hash, qualified: false };
+          }
+        } else {
+          console.error(`Failed to fetch transaction data for hash ${hash}:`, resp.statusText);
+          return { hash, qualified: false };
+        }
+      } catch (error) {
+        console.error(`Error fetching transaction data for hash ${hash}:`, error);
+        return { hash, qualified: false };
+      }
+    }
 
-    // // Function to get asset transfers from Alchemy API and process them
-    // async function getAssetTransfers() {
+    // Function to get asset transfers from Alchemy API and process them
+    async function getAssetTransfers() {
 
-    //   // Initialize Alchemy client
-    //   const config = {
-    //     apiKey: process.env.ALCHEMY_API_KEY || 'demo',
-    //     network: Network.BASE_MAINNET,
-    //   };
+      // Initialize Alchemy client
+      const config = {
+        apiKey: process.env.ALCHEMY_API_KEY || '',
+        network: Network.BASE_MAINNET,
+      };
 
-    //   const alchemy = new Alchemy(config);
+      const alchemy = new Alchemy(config);
 
-    //   try {
-    //     const res = await alchemy.core.getAssetTransfers({
-    //       fromAddress: eth_addresses,
-    //       toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
-    //       excludeZeroValue: true,
-    //       category: ["external"] as any,
-    //     });
+      try {
+        const res = await alchemy.core.getAssetTransfers({
+          fromAddress: eth_addresses,
+          toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+          excludeZeroValue: true,
+          category: ["external"] as any,
+        });
     
-    //     const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
+        const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
     
-    //     for (const hash of hashes) {
-    //       const transactionData = await getTransactionData(hash);
-    //       if (transactionData.qualified) {
-    //         qualifiedTransactions.push(transactionData);
-    //         if (qualifiedTransactions.length >= 5) {
-    //           break; // Exit loop if 5 qualified transactions are found
-    //         }
-    //       }
-    //     }
+        for (const hash of hashes) {
+          const transactionData = await getTransactionData(hash);
+          if (transactionData.qualified) {
+            qualifiedTransactions.push(transactionData);
+            if (qualifiedTransactions.length >= 5) {
+              break; // Exit loop if 5 qualified transactions are found
+            }
+          }
+        }
     
-    //     if (qualifiedTransactions.length > 0) {
-    //       for (let i = 1; i <= qualifiedTransactions.length; i++) {
-    //         await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames`, {
-    //           points: 747,
-    //           account: eth_addresses,
-    //           uniqueId: eth_addresses
-    //         });
-    //         console.log(`User qualified for transaction ${i}!`);
-    //       }
-    //     } else {
-    //       console.log('User not qualified.');
-    //     }
-    //   } catch (error) {
-    //     console.error("Error getting asset transfers:", error);
-    //   }
-    // }
+        if (qualifiedTransactions.length > 0) {
+          for (let i = 1; i <= qualifiedTransactions.length; i++) {
+            await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames`, {
+              points: 747,
+              account: eth_addresses,
+              uniqueId: eth_addresses
+            });
+            console.log(`User qualified for transaction ${i}!`);
+          }
+        } else {
+          console.log('User not qualified.');
+        }
+      } catch (error) {
+        console.error("Error getting asset transfers:", error);
+      }
+    }
 
-    // // Call the function to get asset transfers and process them
-    // await getAssetTransfers();
+    // Call the function to get asset transfers and process them
+    await getAssetTransfers();
 
     return c.res({
       image: (
@@ -1413,11 +1413,11 @@ app.frame('/11th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
-          {/* {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
+          {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )} */}
+          )}
         </div>
       ),
       intents: [
