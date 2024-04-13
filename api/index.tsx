@@ -181,9 +181,9 @@ app.frame('/1st-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified!');
+      console.log('User qualified for task 1!');
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified for task 1!');
     }
 
     return c.res({
@@ -316,11 +316,11 @@ app.frame('/2nd-quest', async (c) => {
         });
         console.log('Tokens minted in April:', tokensMintedInApril.length);
         console.log('Total tokens:', tokenData.results.length);
-        console.log('User qualified!');
+        console.log('User qualified for task 2!');
       } else {
         console.log('Tokens minted in April:', tokensMintedInApril.length);
         console.log('Total tokens:', tokenData.results.length);
-        console.log('User not qualified!');
+        console.log('User not qualified for task 2!');
       }
     }
 
@@ -437,9 +437,9 @@ app.frame('/3rd-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log("User qualified");
+      console.log("User qualified for task 3!");
     } else {
-      console.log("User not qualified");
+      console.log("User not qualified for task 3!");
     }
 
     return c.res({
@@ -544,9 +544,9 @@ app.frame('/4th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified!');
+      console.log('User qualified for task 4!');
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified for task 4!');
     }
 
     return c.res({
@@ -660,10 +660,10 @@ app.frame('/5th-quest', async (c) => {
           console.log(`User qualified for ${i} tokens!`);
         }
       } else {
-        console.log('User not qualified.');
+        console.log('User not qualified for task 5!');
       }
     } else {
-      console.log('User not qualified.');
+      console.log('User not qualified for task 5!');
     }
 
     return c.res({
@@ -768,9 +768,9 @@ app.frame('/6th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified!');
+      console.log('User qualified for task 6!');
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified for task 6!');
     }
   
 
@@ -876,9 +876,9 @@ app.frame('/7th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified!');
+      console.log('User qualified for task 7!');
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified for task 7!');
     }
   
 
@@ -984,9 +984,9 @@ app.frame('/8th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified!');
+      console.log('User qualified for task 8!');
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified for task 8!');
     }
   
 
@@ -1279,10 +1279,14 @@ app.frame('/11th-quest', async (c) => {
     function parseAddressesFromTopics(log: { topics: any[]; }) {
       const addresses: string[] = [];
       log.topics.forEach(topic => {
-        addresses.push(`0x${topic.slice(26)}`); // Slice the topic to get the address
+        if (topic.length >= 26) {
+          addresses.push(`0x${topic.slice(26)}`);
+        } else {
+          console.error("Topic string too short:", topic);
+        }
       });
       return addresses;
-    }
+    }    
 
     let qualifiedTransactions: any[] = [];
 
@@ -1325,22 +1329,25 @@ app.frame('/11th-quest', async (c) => {
     async function getAssetTransfers() {
 
       // Initialize Alchemy client
-      const config = {
-        apiKey: process.env.ALCHEMY_API_KEY || '',
-        network: Network.BASE_MAINNET,
-      };
+      // const config = {
+      //   apiKey: process.env.ALCHEMY_API_KEY || '',
+      //   network: Network.BASE_MAINNET,
+      // };
 
-      const alchemy = new Alchemy(config);
+      // const alchemy = new Alchemy(config);
 
-      try {
-        const res = await alchemy.core.getAssetTransfers({
-          fromAddress: eth_addresses,
-          toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
-          excludeZeroValue: true,
-          category: ["external"] as any,
-        });
+      // try {
+        // const res = await alchemy.core.getAssetTransfers({
+        //   fromAddress: eth_addresses,
+        //   toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+        //   excludeZeroValue: true,
+        //   category: ["external"] as any,
+        // });
     
-        const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
+        const hashes = [
+          '0x81c805bbcc57e0184b2700e1ac5f66db84f69e949cb4b174f96e18b02b98ef11',
+          '0x8fe476c67616d6537f263b8d40c3b86e5aaededc390eb8a646c137cd70d0502f'
+        ];
     
         for (const hash of hashes) {
           const transactionData = await getTransactionData(hash);
@@ -1362,15 +1369,18 @@ app.frame('/11th-quest', async (c) => {
             console.log(`User qualified for transaction ${i}!`);
           }
         } else {
-          console.log('User not qualified.');
+          console.log('User not qualified for task 11!');
         }
-      } catch (error) {
-        console.error("Error getting asset transfers:", error);
-      }
+      // } catch (error) {
+      //   console.error("Error getting asset transfers:", error);
+      // }
     }
 
-    // Call the function to get asset transfers and process them
-    await getAssetTransfers();
+    try {
+      await getAssetTransfers();
+    } catch (error) {
+      console.error("Failed to get asset transfers:", error);
+    }    
 
     return c.res({
       image: (
