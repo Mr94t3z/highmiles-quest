@@ -1340,7 +1340,7 @@ app.frame('/11th-quest', async (c) => {
           category: ["external"] as any,
         });
     
-        const hashes = res.transfers.map(transfer => transfer.hash);
+        const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
     
         for (const hash of hashes) {
           const transactionData = await getTransactionData(hash);
