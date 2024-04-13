@@ -2,7 +2,6 @@ import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
 import { StackClient } from "@stackso/js-core";
 import { Alchemy, Network } from "alchemy-sdk";
-import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
@@ -1262,7 +1261,7 @@ app.frame('/10th-quest', async (c) => {
   }
 });
 
-// 11th Quest - Skip
+// 11th Quest
 app.frame('/11th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
