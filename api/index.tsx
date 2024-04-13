@@ -235,7 +235,7 @@ app.frame('/1st-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⌁</Button.Link>,
-        <Button action='/1st-quest'>🔄 Check</Button>,
+        <Button action='/1st-quest'>🔄 Refresh</Button>,
         <Button action='/'>⏪ Back</Button>,
         <Button action='/2nd-quest'>⏩️ Next</Button>,
       ],
@@ -374,7 +374,7 @@ app.frame('/2nd-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b'>Mint ⌁</Button.Link>,
-        <Button action='/2nd-quest'>🔄 Check</Button>,
+        <Button action='/2nd-quest'>🔄 Refresh</Button>,
         <Button action='/1st-quest'>⏪ Back</Button>,  
         <Button action='/3rd-quest'>⏩️ Next</Button>,
       ],
@@ -491,7 +491,7 @@ app.frame('/3rd-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
-        <Button action='/3rd-quest'>🔄 Check</Button>,
+        <Button action='/3rd-quest'>🔄 Refresh</Button>,
         <Button action='/2nd-quest'>⏪ Back</Button>,
         <Button action='/4th-quest'>⏩️ Next</Button>,
       ],
@@ -598,7 +598,7 @@ app.frame('/4th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b/53'>Mint ⌁</Button.Link>,
-        <Button action='/4th-quest'>🔄 Check</Button>,
+        <Button action='/4th-quest'>🔄 Refresh</Button>,
         <Button action='/3rd-quest'>⏪ Back</Button>,
         <Button action='/5th-quest'>⏩️ Next</Button>,
       ],
@@ -715,7 +715,7 @@ app.frame('/5th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xcd6a95bf6c52a76f75049024b3660307b0078fef/2'>Mint ⌁</Button.Link>,
-        <Button action='/5th-quest'>🔄 Check</Button>,
+        <Button action='/5th-quest'>🔄 Refresh</Button>,
         <Button action='/4th-quest'>⏪ Back</Button>,
         <Button action='/6th-quest'>⏩️ Next</Button>,
       ],
@@ -823,7 +823,7 @@ app.frame('/6th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x38e540ca0315bd0de92ed7c4429418bf51826549'>Swap ⌁</Button.Link>,
-        <Button action='/6th-quest'>🔄 Check</Button>,
+        <Button action='/6th-quest'>🔄 Refresh</Button>,
         <Button action='/5th-quest'>⏪ Back</Button>,
         <Button action='/7th-quest'>⏩️ Next</Button>,
       ],
@@ -931,7 +931,7 @@ app.frame('/7th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0xbb769d7a13e3f10957741b2b13e6c2c4c67908fa'>Swap ⌁</Button.Link>,
-        <Button action='/7th-quest'>🔄 Check</Button>,
+        <Button action='/7th-quest'>🔄 Refresh</Button>,
         <Button action='/6th-quest'>⏪ Back</Button>,
         <Button action='/8th-quest'>⏩️ Next</Button>,
       ],
@@ -1039,7 +1039,7 @@ app.frame('/8th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x621e87af48115122cd96209f820fe0445c2ea90e'>Swap ⌁</Button.Link>,
-        <Button action='/8th-quest'>🔄 Check</Button>,
+        <Button action='/8th-quest'>🔄 Refresh</Button>,
         <Button action='/7th-quest'>⏪ Back</Button>,
         <Button action='/9th-quest'>⏩️ Next</Button>,
       ],
@@ -1123,7 +1123,7 @@ app.frame('/9th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
-        <Button action='/9th-quest'>🔄 Check</Button>,
+        <Button action='/9th-quest'>🔄 Refresh</Button>,
         <Button action='/8th-quest'>⏪ Back</Button>,
         <Button action='/10th-quest'>⏩️ Next</Button>,
       ],
@@ -1239,7 +1239,7 @@ app.frame('/10th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/compose?text=&embeds[]=https://highmiles-quest.vercel.app/api/april'>Cast ⌁</Button.Link>,
-        <Button action='/10th-quest'>🔄 Check</Button>,
+        <Button action='/10th-quest'>🔄 Refresh</Button>,
         <Button action='/9th-quest'>⏪ Back</Button>,
         <Button action='/11th-quest'>⏩️ Next</Button>,
       ],
@@ -1335,7 +1335,7 @@ app.frame('/11th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://github.com/Mr94t3z/storage-farcaster-gift/tree/master?tab=readme-ov-file'>Buy ⌁</Button.Link>,
-        <Button action='/11th-quest'>🔄 Check</Button>,
+        <Button action='/11th-quest'>🔄 Refresh</Button>,
         <Button action='/10th-quest'>⏪ Back</Button>,
         <Button action='/12th-quest'>⏩️ Next</Button>,
       ],
@@ -1443,7 +1443,7 @@ app.frame('/12th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/boeing747'>Follow ⌁</Button.Link>,
-        <Button action='/12th-quest'>🔄 Check</Button>,
+        <Button action='/12th-quest'>🔄 Refresh</Button>,
         <Button action='/11th-quest'>⏪ Back</Button>,
         <Button action='/13th-quest'>⏩️ Next</Button>,
       ],
@@ -1553,7 +1553,7 @@ app.frame('/13th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/channel/747air'>Follow ⌁</Button.Link>,
-        <Button action='/13th-quest'>🔄 Check</Button>,
+        <Button action='/13th-quest'>🔄 Refresh</Button>,
         <Button action='/12th-quest'>⏪ Back</Button>,
         <Button action='/14th-quest'>⏩️ Next</Button>,
       ],
@@ -1595,9 +1595,9 @@ app.frame('/14th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log("User has the plane emoji in their Warpcast Display name.");
+      console.log("User has the plane emoji in their Warpcast Display Name.");
     } else {
-      console.log("User doesn't have the plane emoji in their Warpcast Display name.");
+      console.log("User doesn't have the plane emoji in their Warpcast Display Name.");
     }
 
 
@@ -1651,7 +1651,7 @@ app.frame('/14th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/settings'>Change ⌁</Button.Link>,
-        <Button action='/14th-quest'>🔄 Check</Button>,
+        <Button action='/14th-quest'>🔄 Refresh</Button>,
         <Button action='/13th-quest'>⏪ Back</Button>,
         <Button action='/check-points'>⏩️ Next</Button>,
       ],
