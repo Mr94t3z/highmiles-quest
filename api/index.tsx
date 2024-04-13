@@ -248,7 +248,7 @@ app.frame('/1st-quest', async (c) => {
   }
 });
 
-// 2nd Quest - Deprecated
+// 2nd Quest
 app.frame('/2nd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
@@ -309,7 +309,7 @@ app.frame('/2nd-quest', async (c) => {
       if (tokensMintedInApril.length === tokenData.results.length) {
         qualified = true;
         await stack.track("Mint - All 747 Airlines NFTs (made in April)", {
-          points: 747,
+          points: 1250,
           account: eth_addresses,
           uniqueId: eth_addresses
         });
@@ -362,7 +362,7 @@ app.frame('/2nd-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 2 - 747 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 2 - 1250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - All 747 Airlines NFTs (made in April) ]</p>
           {qualified ? (
               <p style={{ fontSize: 24 }}> Completed ✅ </p>
@@ -432,7 +432,7 @@ app.frame('/3rd-quest', async (c) => {
     
     if (userDataResponse.tokens.length > 0) {
       await stack.track("Mint - At least 1 747 Airlines NFT (in $crash)", {
-        points: 500,
+        points: 1250,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
@@ -480,7 +480,7 @@ app.frame('/3rd-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 3 - 500 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 3 - 1250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - At least 1 747 Airlines NFT (in $crash) ]</p>
           {userDataResponse.tokens.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -539,7 +539,7 @@ app.frame('/4th-quest', async (c) => {
 
     if (userDataResponse.tokens.length > 0) {
       await stack.track("Mint - Imagine x 747 Air NFT", {
-        points: 333,
+        points: 777,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
@@ -587,7 +587,7 @@ app.frame('/4th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 4 - 333 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 4 - 777 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Imagine x 747 Air NFT ]</p>
           {userDataResponse.tokens.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -722,15 +722,25 @@ app.frame('/6th-quest', async (c) => {
 
     const userDataResponse = await responseUserData.json();
 
-    if (userDataResponse.tokens.length > 0) {
-      await stack.track("Mint - Destinations! Boarding Pass", {
-        points: 2000,
-        account: eth_addresses,
-        uniqueId: eth_addresses
-      });
-      console.log('User qualified!');
+    // Check if userDataResponse exists and if tokenCount is greater than 0
+    if (userDataResponse && userDataResponse.tokens && userDataResponse.tokens.length > 0) {
+      const tokenCount = userDataResponse.tokens[0].ownership.tokenCount;
+
+      if (tokenCount > 0) {
+        // Iterate from 1 to the value of tokenCount and execute the corresponding code block
+        for (let i = 1; i <= tokenCount; i++) {
+          await stack.track(`Mint ${i} - Destinations! Boarding Pass`, {
+            points: 2000,
+            account: eth_addresses,
+            uniqueId: eth_addresses
+          });
+          console.log(`User qualified for ${i} tokens!`);
+        }
+      } else {
+        console.log('User not qualified.');
+      }
     } else {
-      console.log('User not qualified!');
+      console.log('User not qualified.');
     }
 
     return c.res({
@@ -1658,7 +1668,7 @@ app.frame('/15th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     if (name.includes('✈️')) {
-      await stack.track("Profile Cosmetic - Have the plane ✈️ emoji in Warpcast display name", {
+      await stack.track("Profile Cosmetic - Have ✈️ on Display Name", {
         points: 747,
         account: eth_addresses,
         uniqueId: eth_addresses
@@ -1709,7 +1719,7 @@ app.frame('/15th-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 15 - 747 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Profile Cosmetic - Have the plane ✈️ emoji in Warpcast display name ]</p>
+          <p style={{ margin : 0 }}>[ Profile Cosmetic - Have ✈️ on Display Name ]</p>
           {name.includes('✈️') ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
