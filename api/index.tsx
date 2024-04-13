@@ -1416,99 +1416,8 @@ app.frame('/12th-quest', async (c) => {
   }
 });
 
-// 13th Quest - Skip
+// 13th Quest
 app.frame('/13th-quest', async (c) => {
-  const { frameData } = c;
-  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
-
-  try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
-      method: 'GET',
-      headers: {
-        'accept': 'application/json',
-        'api_key': process.env.NEYNAR_API_KEY || '',
-      },
-    });
-
-    const data = await response.json();
-    const userData = data.users[0];
-
-    // // User connected wallet address
-    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
-
-
-    // stack.track("Follow - 747 Air on Orb", {
-    //   points: 474,
-    //   account: eth_addresses,
-    //   uniqueId: eth_addresses
-    // });
-
-
-    return c.res({
-      image: (
-        <div
-          style={{
-            alignItems: 'center',
-            background: '#1A30FF',
-            backgroundSize: '100% 100%',
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'nowrap',
-            height: '100%',
-            justifyContent: 'center',
-            textAlign: 'center',
-            width: '100%',
-            color: 'white',
-            fontFamily: 'Space Mono',
-            fontSize: 35,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 0,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
-              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-              }}
-              width={200} 
-              height={200} 
-            />
-            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
-          </div>
-          <p style={{ fontSize: 30 }}>Task 13 - 474 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Follow - 747 Air on Orb ]</p>
-          {/* {castData && castData.some(data => data.result.casts.length > 0) ? (
-            <p style={{ fontSize: 24 }}>Completed ✅</p>
-          ) : (
-            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )} */}
-        </div>
-      ),
-      intents: [
-        <Button.Link href='https://orb.club/@747'>Follow ⌁</Button.Link>,
-        <Button action='/13th-quest'>🔄 Check</Button>,
-        <Button action='/12th-quest'>⏪ Back</Button>,
-        <Button action='/14th-quest'>⏩️ Next</Button>,
-      ],
-    });
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
-  }
-});
-
-// 14th Quest
-app.frame('/14th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1591,7 +1500,7 @@ app.frame('/14th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 14 - 474 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 13 - 474 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Follow - 747 Air on Warpcast ]</p>
           {userFollowing ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1602,9 +1511,9 @@ app.frame('/14th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/boeing747'>Follow ⌁</Button.Link>,
-        <Button action='/14th-quest'>🔄 Check</Button>,
-        <Button action='/13th-quest'>⏪ Back</Button>,
-        <Button action='/15th-quest'>⏩️ Next</Button>,
+        <Button action='/13th-quest'>🔄 Check</Button>,
+        <Button action='/12th-quest'>⏪ Back</Button>,
+        <Button action='/14th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1615,8 +1524,8 @@ app.frame('/14th-quest', async (c) => {
   }
 });
 
-// 15th Quest
-app.frame('/15th-quest', async (c) => {
+// 14th Quest
+app.frame('/14th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1701,7 +1610,7 @@ app.frame('/15th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 15 - 474 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 14 - 474 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Follow - 747 Air Channel on Warpcast ]</p>
           {userFollowing ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1712,9 +1621,9 @@ app.frame('/15th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/channel/747air'>Follow ⌁</Button.Link>,
-        <Button action='/15th-quest'>🔄 Check</Button>,
-        <Button action='/14th-quest'>⏪ Back</Button>,
-        <Button action='/16th-quest'>⏩️ Next</Button>,
+        <Button action='/14th-quest'>🔄 Check</Button>,
+        <Button action='/13th-quest'>⏪ Back</Button>,
+        <Button action='/15th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1725,8 +1634,8 @@ app.frame('/15th-quest', async (c) => {
   }
 });
 
-// 16th Quest
-app.frame('/16th-quest', async (c) => {
+// 15th Quest
+app.frame('/15th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1799,7 +1708,7 @@ app.frame('/16th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 16 - 747 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 15 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Profile Cosmetic - Have the plane ✈️ emoji in Warpcast display name ]</p>
           {name.includes('✈️') ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1810,8 +1719,8 @@ app.frame('/16th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/settings'>Change ⌁</Button.Link>,
-        <Button action='/16th-quest'>🔄 Check</Button>,
-        <Button action='/15th-quest'>⏪ Back</Button>,
+        <Button action='/15th-quest'>🔄 Check</Button>,
+        <Button action='/14th-quest'>⏪ Back</Button>,
         <Button action='/check-points'>⏩️ Next</Button>,
       ],
     });
