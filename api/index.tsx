@@ -248,7 +248,7 @@ app.frame('/1st-quest', async (c) => {
   }
 });
 
-// 2nd Quest
+// 2nd Quest - Deprecated
 app.frame('/2nd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
@@ -261,43 +261,32 @@ app.frame('/2nd-quest', async (c) => {
         'api_key': process.env.NEYNAR_API_KEY || '',
       },
     });
-
+    
     const data = await response.json();
     const userData = data.users[0];
     
     // Fetch token data
     const responseTokenData = await fetch(`${baseUrlZora}/0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b?offset=0&limit=50&sort_key=CREATED&sort_direction=DESC`);
-
+    
     const tokenData = await responseTokenData.json();
+    
+    // Filter tokens with is_active: true and start_datetime >= April 1st
+    tokenData.results = tokenData.results.filter((token: { mintable: { start_datetime: string | number | Date; is_active: boolean; }; }) => {
+      const startDate = new Date('2024-04-01');
+      const tokenStartDate = new Date(token.mintable.start_datetime);
+      return token.mintable.is_active === true && tokenStartDate >= startDate;
+    });
+
     let qualified = false;
     
     // Check if data is available
     if (tokenData.results && tokenData.results.length > 0) {
-      // Extract token_id, token_name, start_datetime, and end_datetime for each token
-      const tokens = tokenData.results.map((token: { mintable: { start_datetime: string | number | Date; token_id: any; token_name: any; end_datetime: any; }; collection_address: any; }) => {
-          // Check if start_datetime falls from April 1st, 2024 onwards
-          const startDate = new Date('2024-04-01T00:00:00');
-          const tokenStartDate = new Date(token.mintable.start_datetime);
-
-          if (tokenStartDate >= startDate) {
-              return {
-                  collection_address: token.collection_address,
-                  token_id: token.mintable.token_id,
-                  token_name: token.mintable.token_name,
-                  start_datetime: token.mintable.start_datetime,
-                  end_datetime: token.mintable.end_datetime
-              };
-          } else {
-              return null;
-          }
-      }).filter((token: null) => token !== null);
-
       // User connected wallet address
       const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
-      
+    
       // Format the data as collection_address:token_id
-      const formattedTokens = tokens.map((token: { collection_address: any; token_id: any; }) => `${token.collection_address}:${token.token_id}`);
-      
+      const formattedTokens = tokenData.results.map((token: { collection_address: any; token_id: any; }) => `${token.collection_address}:${token.token_id}`);
+    
       // Get user tokens
       const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${formattedTokens.join('&tokens=')}&limit=200`, {
         headers: {
@@ -305,21 +294,34 @@ app.frame('/2nd-quest', async (c) => {
           'x-api-key': process.env.RESERVOIR_API_KEY || '',
         },
       });
-      
+    
       const userDataResponse = await responseUserData.json();
-
-      if (userDataResponse.tokens.length >= formattedTokens.length) {
+    
+      // Filter tokens minted between April 1st and April 28th
+      const tokensMintedInApril = userDataResponse.tokens.filter((token: { ownership: { acquiredAt: string | number | Date; }; }) => {
+        const acquiredDate = new Date(token.ownership.acquiredAt);
+        return (
+          acquiredDate >= new Date('2024-04-01') &&
+          acquiredDate <= new Date('2024-04-28')
+        );
+      });
+    
+      if (tokensMintedInApril.length === tokenData.results.length) {
         qualified = true;
         await stack.track("Mint - All 747 Airlines NFTs (made in April)", {
           points: 747,
           account: eth_addresses,
           uniqueId: eth_addresses
         });
+        console.log('Tokens minted in April:', tokensMintedInApril.length);
+        console.log('Total tokens:', tokenData.results.length);
         console.log('User qualified!');
       } else {
+        console.log('Tokens minted in April:', tokensMintedInApril.length);
+        console.log('Total tokens:', tokenData.results.length);
         console.log('User not qualified!');
       }
-    }  
+    }
 
     return c.res({
       image: (
