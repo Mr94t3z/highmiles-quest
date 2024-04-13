@@ -611,86 +611,8 @@ app.frame('/4th-quest', async (c) => {
   }
 });
 
-// 5th Quest - Skip
+// 5th Quest
 app.frame('/5th-quest', async (c) => {
-  const { frameData } = c;
-  const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
-
-  try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
-      method: 'GET',
-      headers: {
-        'accept': 'application/json',
-        'api_key': process.env.NEYNAR_API_KEY || '',
-      },
-    });
-
-    const data = await response.json();
-    const userData = data.users[0];
-  
-
-    return c.res({
-      image: (
-        <div
-          style={{
-            alignItems: 'center',
-            background: '#1A30FF',
-            backgroundSize: '100% 100%',
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'nowrap',
-            height: '100%',
-            justifyContent: 'center',
-            textAlign: 'center',
-            width: '100%',
-            color: 'white',
-            fontFamily: 'Space Mono',
-            fontSize: 35,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 0,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
-              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-              }}
-              width={200} 
-              height={200} 
-            />
-            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
-          </div>
-          <p style={{ fontSize: 30 }}>Task 5 - 500 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Mint - leaderboard from 747 game ]</p>
-          {/* <p style={{ fontSize: 24 }}> Completed ✅ </p> */}
-          <p style={{ fontSize: 24 }}> Not qualified ❌</p>
-        </div>
-      ),
-      intents: [
-        <Button.Link href='https://zora.co/explore/crash'>Mint ⌁</Button.Link>,
-        <Button action='/5th-quest'>🔄 Check</Button>,
-        <Button action='/4th-quest'>⏪ Back</Button>,
-        <Button action='/6th-quest'>⏩️ Next</Button>,
-      ],
-    });
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
-  }
-});
-
-// 6th Quest
-app.frame('/6th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -782,7 +704,7 @@ app.frame('/6th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 6 - 2000 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 5 - 2000 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Destinations! Boarding Pass ]</p>
           {userDataResponse.tokens.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -793,9 +715,9 @@ app.frame('/6th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://zora.co/collect/base:0xcd6a95bf6c52a76f75049024b3660307b0078fef/2'>Mint ⌁</Button.Link>,
-        <Button action='/6th-quest'>🔄 Check</Button>,
-        <Button action='/5th-quest'>⏪ Back</Button>,
-        <Button action='/7th-quest'>⏩️ Next</Button>,
+        <Button action='/5th-quest'>🔄 Check</Button>,
+        <Button action='/4th-quest'>⏪ Back</Button>,
+        <Button action='/6th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -806,8 +728,8 @@ app.frame('/6th-quest', async (c) => {
   }
 });
 
-// 7th Quest
-app.frame('/7th-quest', async (c) => {
+// 6th Quest
+app.frame('/6th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -890,7 +812,7 @@ app.frame('/7th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 7 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 6 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $SFO ]</p>
           {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -901,9 +823,9 @@ app.frame('/7th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x38e540ca0315bd0de92ed7c4429418bf51826549'>Swap ⌁</Button.Link>,
-        <Button action='/7th-quest'>🔄 Check</Button>,
-        <Button action='/6th-quest'>⏪ Back</Button>,
-        <Button action='/8th-quest'>⏩️ Next</Button>,
+        <Button action='/6th-quest'>🔄 Check</Button>,
+        <Button action='/5th-quest'>⏪ Back</Button>,
+        <Button action='/7th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -914,8 +836,8 @@ app.frame('/7th-quest', async (c) => {
   }
 });
 
-// 8th Quest
-app.frame('/8th-quest', async (c) => {
+// 7th Quest
+app.frame('/7th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -998,7 +920,7 @@ app.frame('/8th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 8 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 7 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $NYC ]</p>
           {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1009,9 +931,9 @@ app.frame('/8th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0xbb769d7a13e3f10957741b2b13e6c2c4c67908fa'>Swap ⌁</Button.Link>,
-        <Button action='/8th-quest'>🔄 Check</Button>,
-        <Button action='/7th-quest'>⏪ Back</Button>,
-        <Button action='/9th-quest'>⏩️ Next</Button>,
+        <Button action='/7th-quest'>🔄 Check</Button>,
+        <Button action='/6th-quest'>⏪ Back</Button>,
+        <Button action='/8th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1022,8 +944,8 @@ app.frame('/8th-quest', async (c) => {
   }
 });
 
-// 9th Quest
-app.frame('/9th-quest', async (c) => {
+// 8th Quest
+app.frame('/8th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1106,7 +1028,7 @@ app.frame('/9th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 9 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 8 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $CRASH ]</p>
           {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1117,9 +1039,9 @@ app.frame('/9th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/tokens/base/0x621e87af48115122cd96209f820fe0445c2ea90e'>Swap ⌁</Button.Link>,
-        <Button action='/9th-quest'>🔄 Check</Button>,
-        <Button action='/8th-quest'>⏪ Back</Button>,
-        <Button action='/10th-quest'>⏩️ Next</Button>,
+        <Button action='/8th-quest'>🔄 Check</Button>,
+        <Button action='/7th-quest'>⏪ Back</Button>,
+        <Button action='/9th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1130,8 +1052,8 @@ app.frame('/9th-quest', async (c) => {
   }
 });
 
-// 10th Quest - Skip
-app.frame('/10th-quest', async (c) => {
+// 9th Quest - Skip
+app.frame('/9th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1190,7 +1112,7 @@ app.frame('/10th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 10 - 1500 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 9 - 1500 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
           {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1201,9 +1123,9 @@ app.frame('/10th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
-        <Button action='/10th-quest'>🔄 Check</Button>,
-        <Button action='/9th-quest'>⏪ Back</Button>,
-        <Button action='/11th-quest'>⏩️ Next</Button>,
+        <Button action='/9th-quest'>🔄 Check</Button>,
+        <Button action='/8th-quest'>⏪ Back</Button>,
+        <Button action='/10th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1214,8 +1136,8 @@ app.frame('/10th-quest', async (c) => {
   }
 });
 
-// 11th Quest
-app.frame('/11th-quest', async (c) => {
+// 10th Quest
+app.frame('/10th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1306,7 +1228,7 @@ app.frame('/11th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 11 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 10 - 250 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels ]</p>
           {castData && castData.some(data => data.result.casts.length > 0) ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1317,9 +1239,9 @@ app.frame('/11th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/compose?text=&embeds[]=https://highmiles-quest.vercel.app/api/april'>Cast ⌁</Button.Link>,
-        <Button action='/11th-quest'>🔄 Check</Button>,
-        <Button action='/10th-quest'>⏪ Back</Button>,
-        <Button action='/12th-quest'>⏩️ Next</Button>,
+        <Button action='/10th-quest'>🔄 Check</Button>,
+        <Button action='/9th-quest'>⏪ Back</Button>,
+        <Button action='/11th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1330,8 +1252,8 @@ app.frame('/11th-quest', async (c) => {
   }
 });
 
-// 12th Quest - Skip
-app.frame('/12th-quest', async (c) => {
+// 11th Quest - Skip
+app.frame('/11th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1402,7 +1324,7 @@ app.frame('/12th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 12 - 747 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 11 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
           {/* {castData && castData.some(data => data.result.casts.length > 0) ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1413,9 +1335,9 @@ app.frame('/12th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://github.com/Mr94t3z/storage-farcaster-gift/tree/master?tab=readme-ov-file'>Buy ⌁</Button.Link>,
-        <Button action='/12th-quest'>🔄 Check</Button>,
-        <Button action='/11th-quest'>⏪ Back</Button>,
-        <Button action='/13th-quest'>⏩️ Next</Button>,
+        <Button action='/11th-quest'>🔄 Check</Button>,
+        <Button action='/10th-quest'>⏪ Back</Button>,
+        <Button action='/12th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1426,8 +1348,8 @@ app.frame('/12th-quest', async (c) => {
   }
 });
 
-// 13th Quest
-app.frame('/13th-quest', async (c) => {
+// 12th Quest
+app.frame('/12th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1462,7 +1384,7 @@ app.frame('/13th-quest', async (c) => {
 
     if (userFollowing) {
       await stack.track("Follow - 747 Air on Warpcast", {
-        points: 474,
+        points: 747,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
@@ -1510,7 +1432,7 @@ app.frame('/13th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 13 - 474 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 12 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Follow - 747 Air on Warpcast ]</p>
           {userFollowing ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1521,9 +1443,9 @@ app.frame('/13th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/boeing747'>Follow ⌁</Button.Link>,
-        <Button action='/13th-quest'>🔄 Check</Button>,
-        <Button action='/12th-quest'>⏪ Back</Button>,
-        <Button action='/14th-quest'>⏩️ Next</Button>,
+        <Button action='/12th-quest'>🔄 Check</Button>,
+        <Button action='/11th-quest'>⏪ Back</Button>,
+        <Button action='/13th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1534,8 +1456,8 @@ app.frame('/13th-quest', async (c) => {
   }
 });
 
-// 14th Quest
-app.frame('/14th-quest', async (c) => {
+// 13th Quest
+app.frame('/13th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1572,7 +1494,7 @@ app.frame('/14th-quest', async (c) => {
 
     if (userFollowing) {
       await stack.track("Follow - 747 Air Channel on Warpcast", {
-        points: 474,
+        points: 747,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
@@ -1620,7 +1542,7 @@ app.frame('/14th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 14 - 474 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 13 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Follow - 747 Air Channel on Warpcast ]</p>
           {userFollowing ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1631,9 +1553,9 @@ app.frame('/14th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/channel/747air'>Follow ⌁</Button.Link>,
-        <Button action='/14th-quest'>🔄 Check</Button>,
-        <Button action='/13th-quest'>⏪ Back</Button>,
-        <Button action='/15th-quest'>⏩️ Next</Button>,
+        <Button action='/13th-quest'>🔄 Check</Button>,
+        <Button action='/12th-quest'>⏪ Back</Button>,
+        <Button action='/14th-quest'>⏩️ Next</Button>,
       ],
     });
   } catch (error) {
@@ -1644,8 +1566,8 @@ app.frame('/14th-quest', async (c) => {
   }
 });
 
-// 15th Quest
-app.frame('/15th-quest', async (c) => {
+// 14th Quest
+app.frame('/14th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -1718,7 +1640,7 @@ app.frame('/15th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 15 - 747 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 14 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Profile Cosmetic - Have ✈️ on Display Name ]</p>
           {name.includes('✈️') ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1729,8 +1651,8 @@ app.frame('/15th-quest', async (c) => {
       ),
       intents: [
         <Button.Link href='https://warpcast.com/~/settings'>Change ⌁</Button.Link>,
-        <Button action='/15th-quest'>🔄 Check</Button>,
-        <Button action='/14th-quest'>⏪ Back</Button>,
+        <Button action='/14th-quest'>🔄 Check</Button>,
+        <Button action='/13th-quest'>⏪ Back</Button>,
         <Button action='/check-points'>⏩️ Next</Button>,
       ],
     });
