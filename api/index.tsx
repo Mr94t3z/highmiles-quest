@@ -1285,105 +1285,119 @@ app.frame('/11th-quest', async (c) => {
     const targetAddress = process.env.COINBASE_COMMERCE_WALLET_ADDRESS || '';
 
     // Function to extract wallet addresses from all topics in a log
-    function parseAddressesFromTopics(log: { topics: any[]; }) {
-      const addresses: string[] = [];
-      log.topics.forEach(topic => {
-        if (topic.length >= 26) {
-          addresses.push(`0x${topic.slice(26)}`);
-        } else {
-          console.error("Topic string too short:", topic);
-        }
-      });
-      return addresses;
-    }    
+    // function parseAddressesFromTopics(log: { topics: any[]; }) {
+    //   const addresses: string[] = [];
+    //   log.topics.forEach(topic => {
+    //     if (topic.length >= 26) {
+    //       addresses.push(`0x${topic.slice(26)}`);
+    //     } else {
+    //       console.error("Topic string too short:", topic);
+    //     }
+    //   });
+    //   return addresses;
+    // }    
 
-    let qualifiedTransactions: any[] = [];
+    // let qualifiedTransactions: any[] = [];
 
-    // Function to fetch transaction data from Tatum API
-    async function getTransactionData(hash: string) {
-      try {
-        const resp = await fetch(
-          `https://api.tatum.io/v3/base/transaction/${hash}`,
-          {
-            method: 'GET',
-            headers: {
-              'x-api-key': process.env.TATUM_API_KEY || '',
-            }
-          }
-        );
+    // // Function to fetch transaction data from Tatum API
+    // async function getTransactionData(hash: string) {
+    //   try {
+    //     const resp = await fetch(
+    //       `https://api.tatum.io/v3/base/transaction/${hash}`,
+    //       {
+    //         method: 'GET',
+    //         headers: {
+    //           'x-api-key': process.env.TATUM_API_KEY || '',
+    //         }
+    //       }
+    //     );
     
-        if (resp.ok) {
-          const data = await resp.json(); // Parse response as JSON
-          const logs = data.logs || []; // Extract logs field, or default to an empty array if logs are not available
+    //     if (resp.ok) {
+    //       const data = await resp.json(); // Parse response as JSON
+    //       const logs = data.logs || []; // Extract logs field, or default to an empty array if logs are not available
     
-          // Parse all logs, filter, and extract addresses from all topics for logs that match the target address
-          const matchingLogs = logs.filter((log: { topics: any[]; }) => parseAddressesFromTopics(log).includes(targetAddress));
+    //       // Parse all logs, filter, and extract addresses from all topics for logs that match the target address
+    //       const matchingLogs = logs.filter((log: { topics: any[]; }) => parseAddressesFromTopics(log).includes(targetAddress));
           
-          if (matchingLogs.length > 0) {
-            return { hash, qualified: true };
-          } else {
-            return { hash, qualified: false };
-          }
-        } else {
-          console.error(`Failed to fetch transaction data for hash ${hash}:`, resp.statusText);
-          return { hash, qualified: false };
-        }
-      } catch (error) {
-        console.error(`Error fetching transaction data for hash ${hash}:`, error);
-        return { hash, qualified: false };
-      }
-    }
+    //       if (matchingLogs.length > 0) {
+    //         return { hash, qualified: true };
+    //       } else {
+    //         return { hash, qualified: false };
+    //       }
+    //     } else {
+    //       console.error(`Failed to fetch transaction data for hash ${hash}:`, resp.statusText);
+    //       return { hash, qualified: false };
+    //     }
+    //   } catch (error) {
+    //     console.error(`Error fetching transaction data for hash ${hash}:`, error);
+    //     return { hash, qualified: false };
+    //   }
+    // }
 
-    // Function to get asset transfers from Alchemy API and process them
-    async function getAssetTransfers() {
 
-      try {
-        const res = await alchemy.core.getAssetTransfers({
-          fromBlock: "0x0",
-          fromAddress: "0x5183e0203858aa3e3bc3a7d9cb41875a4c0a6216",
-          toAddress: "0x131642c019af815ae5f9926272a70c84ae5c37ab",
-          excludeZeroValue: true,
-          category: [AssetTransfersCategory.EXTERNAL],
-        });
 
-        console.log("Asset transfers:", res);
+    // // Function to get asset transfers from Alchemy API and process them
+    // async function getAssetTransfers() {
+
+    //   try {
+    //     const res = await alchemy.core.getAssetTransfers({
+    //       fromAddress: eth_addresses,
+    //       toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+    //       excludeZeroValue: true,
+    //       category: [AssetTransfersCategory.EXTERNAL],
+    //     });
+
+    //     console.log("Asset transfers:", res);
     
-        const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
+    //     const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
 
-        console.log("Hashes:", hashes);
+    //     console.log("Hashes:", hashes);
     
-        for (const hash of hashes) {
-          const transactionData = await getTransactionData(hash);
-          if (transactionData.qualified) {
-            qualifiedTransactions.push(transactionData);
-            if (qualifiedTransactions.length >= 5) {
-              break; // Exit loop if 5 qualified transactions are found
-            }
-          }
-        }
+    //     for (const hash of hashes) {
+    //       const transactionData = await getTransactionData(hash);
+    //       if (transactionData.qualified) {
+    //         qualifiedTransactions.push(transactionData);
+    //         if (qualifiedTransactions.length >= 5) {
+    //           break; // Exit loop if 5 qualified transactions are found
+    //         }
+    //       }
+    //     }
     
-        if (qualifiedTransactions.length > 0) {
-          for (let i = 1; i <= qualifiedTransactions.length; i++) {
-            await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames`, {
-              points: 747,
-              account: eth_addresses,
-              uniqueId: eth_addresses
-            });
-            console.log(`User qualified for transaction ${i}!`);
-          }
-        } else {
-          console.log('User not qualified for task 11!');
-        }
-      } catch (error) {
-        console.error("Error getting asset transfers:", error);
-      }
-    }
+    //     if (qualifiedTransactions.length > 0) {
+    //       for (let i = 1; i <= qualifiedTransactions.length; i++) {
+    //         await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames`, {
+    //           points: 747,
+    //           account: eth_addresses,
+    //           uniqueId: eth_addresses
+    //         });
+    //         console.log(`User qualified for transaction ${i}!`);
+    //       }
+    //     } else {
+    //       console.log('User not qualified for task 11!');
+    //     }
+    //   } catch (error) {
+    //     console.error("Error getting asset transfers:", error);
+    //   }
+    // }
 
-    try {
-      await getAssetTransfers();
-    } catch (error) {
-      console.error("Failed to get asset transfers:", error);
-    }    
+    // try {
+    //   await getAssetTransfers();
+    // } catch (error) {
+    //   console.error("Failed to get asset transfers:", error);
+    // }  
+    
+    const getTransfer = async () => {
+      const data = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        fromAddress: eth_addresses,
+        toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+        category: [AssetTransfersCategory.EXTERNAL],
+      });
+     
+      console.log(data);
+     }
+     
+    getTransfer();
 
     return c.res({
       image: (
@@ -1426,11 +1440,11 @@ app.frame('/11th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 747 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
-          {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
+          {/* {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )}
+          )} */}
         </div>
       ),
       intents: [
