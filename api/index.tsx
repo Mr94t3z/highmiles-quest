@@ -1,6 +1,7 @@
 import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
 import { StackClient } from "@stackso/js-core";
+import { init, fetchQuery } from "@airstack/node";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
@@ -43,6 +44,9 @@ const stack = new StackClient({
   pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
 });
 
+// Initialize Airstack with your API key
+init(process.env.AIRSTACK_API_KEY || '');
+
 // Get the current date
 const currentDate = new Date();
 // Set the start dates of the range
@@ -53,8 +57,6 @@ const endDateString = process.env.QUEST_END_DATE || '';
 const startDate = new Date(startDateString);
 // Get the month name from the start date
 const questMonth = startDate.toLocaleString('default', { month: 'long' });
-// Neynar API base URL V1
-const baseUrlNeynarV1 = process.env.BASE_URL_NEYNAR_V1;
 // Neynar API base URL V2
 const baseUrlNeynarV2 = process.env.BASE_URL_NEYNAR_V2;
 // Reservoir API base URL
@@ -1158,44 +1160,71 @@ app.frame('/10th-quest', async (c) => {
       },
     });
 
-    const data = await response.json();
-    const userData = data.users[0];
-
-    // List of channels
-    const channels = ["/747air", "/higher", "/imagine", "/enjoy", "/degen"];
-
-    const links = channels.map(channel => "https://warpcast.com/~/channel" + channel);
-
-    const castResponses = await Promise.all(links.map(link => {
-      return fetch(`${baseUrlNeynarV1}/casts?fid=${userData.fid}&parent_url=${encodeURIComponent(link)}&viewerFid=${userData.fid}&limit=1`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'api_key': process.env.NEYNAR_API_KEY || '',
-        }
-      });
-    }));
-
-    const castData = await Promise.all(castResponses.map(response => response.json()));
+    const dataResponse = await response.json();
+    const userData = dataResponse.users[0];
 
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    // Process each cast data
-    castData.forEach((data) => {
-      const casts = data.result.casts;
-      if (casts.length > 0) {
-        const channel = casts[0].parentUrl;
-        stack.track("Tip - Casts made in /747Air /higher /imagine /enjoy or /degen channels", {
-          points: 250,
-          account: eth_addresses,
-          uniqueId: eth_addresses
-        });
-        console.log('User qualified, found cast in -', channel);
-      } else {
-        console.log('User not casting in this channel!');
+    // Define FarcasterCasts GraphQL query
+    const query = `
+      query MyQuery {
+        FarcasterCasts(
+          input: {
+            filter: {
+              castedBy: {_eq: "fc_fname:${userData.username}"}
+              castedAtTimestamp: {_gte: "2024-04-01T00:00:00Z"}
+            },
+            blockchain: ALL
+          }
+        ) 
+        {
+          Cast {
+            castedAtTimestamp
+            url
+            text
+            channel {
+              channelId
+            }
+          }
+        }
       }
-    });
+    `;
+
+    const { data, error } = await fetchQuery(query);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+    } else {
+      // Check if data is null or empty
+      if (!data || !data.FarcasterCasts || data.FarcasterCasts.Cast.length === 0) {
+        console.log("No found cast tip for this user.");
+      } else {
+        const regex = /\b\d+\s?\$crash\b/gi; // Regular expression to match "{amount} $crash" or "{amount} $CRASH" or "{amount} $Crash"
+        let claim_amount = 1;
+        for (const cast of data.FarcasterCasts.Cast) {
+          if (
+            cast.channel && 
+            (cast.channel.channelId === '747air' ||
+            cast.channel.channelId === 'higher' || 
+            cast.channel.channelId === 'imagine' || 
+            cast.channel.channelId === 'enjoy' || 
+            cast.channel.channelId === 'degen') && 
+            cast.text.match(regex)
+          ) {
+            // Insert points for each cast
+            await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
+              points: 10,
+              account: eth_addresses,
+              uniqueId: eth_addresses
+            });
+            console.log(`Found ${claim_amount} cast tip for this user.`);
+            claim_amount++;
+            if (claim_amount > 50) break;
+          }
+        }
+      }
+    }
 
     return c.res({
       image: (
@@ -1236,9 +1265,9 @@ app.frame('/10th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 10 - 250 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels ]</p>
-          {castData && castData.some(data => data.result.casts.length > 0) ? (
+          <p style={{ fontSize: 30 }}>Task 10 - 10 Points 🎖️</p>
+          <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip) ]</p>
+          {data.FarcasterCasts.Cast.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>

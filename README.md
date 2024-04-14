@@ -16,10 +16,7 @@ Head to http://localhost:5173/api/april
 ### Neynar
 Get Started - https://docs.neynar.com/docs/getting-started-with-neynar
 
-#### API Reference V1 
-> Fetch users based on FIDs - https://docs.neynar.com/reference/casts-v1
-
-#### API Reference V2
+#### API Reference
 > Retrieve casts for a given user - https://docs.neynar.com/reference/user-bulk
 
 ### Chainbase
