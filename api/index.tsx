@@ -760,28 +760,46 @@ app.frame('/6th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.SFO_SMART_CONTRACT_ADDRESS || '';
 
-    // Get token transfers by contract from 1 - 28 April 2024 
-    const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
+    const responseTokenData = await fetch(`${baseUrlChainbase}/account/tokens?chain_id=8453&address=${eth_addresses}&contract_address=${contractAddress}&limit=1&page=1`, {
       headers: {
         'accept': 'application/json',
         'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
-
-    const userDataResponse = await responseUserData.json();
-
-
-    if (userDataResponse && userDataResponse.data && userDataResponse.data.length > 0) {
+    
+    const tokenData = await responseTokenData.json();
+    
+    if (tokenData && tokenData.data && tokenData.data.length > 0) {
+      // Given data
+      const balanceHex = tokenData.data[0].balance;
+      const decimals = 18;
+    
+      // Convert hexadecimal balance to a BigInt
+      const balanceBigInt = BigInt(balanceHex);
+    
+      // Create BigInt representation of 10^18 for decimals adjustment
+      const factor = BigInt(10 ** decimals);
+    
+      // Adjust for decimals
+      const adjustedBalance = balanceBigInt / factor;
+    
+      // .0001 pt per $SF0
+      const finalBalance = Number(adjustedBalance) * 0.0001;
+    
+      // Round the final balance to the nearest integer
+      const total_point = Math.round(finalBalance);
+    
+      console.log(total_point);
+    
       await stack.track("Swap - (any token) for $SFO", {
-        points: 250,
+        points: total_point,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified for task 6!');
+      console.log(`User qualified for ${total_point} points!`);
     } else {
       console.log('User not qualified for task 6!');
     }
-  
 
     return c.res({
       image: (
@@ -822,9 +840,9 @@ app.frame('/6th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 6 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 6 - .0001 pt per $SFO 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $SFO ]</p>
-          {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+          {tokenData && tokenData.data && tokenData.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -869,27 +887,44 @@ app.frame('/7th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.NYC_SMART_CONTRACT_ADDRESS || '';
 
-    // Get token transfers by contract from 1 - 28 April 2024 
-    const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
+    const responseTokenData = await fetch(`${baseUrlChainbase}/account/tokens?chain_id=8453&address=${eth_addresses}&contract_address=${contractAddress}&limit=1&page=1`, {
       headers: {
         'accept': 'application/json',
         'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
-
-    const userDataResponse = await responseUserData.json();
-
-    if (userDataResponse && userDataResponse.data && userDataResponse.data.length > 0) {
+    
+    const tokenData = await responseTokenData.json();
+    
+    if (tokenData && tokenData.data && tokenData.data.length > 0) {
+      // Given data
+      const balanceHex = tokenData.data[0].balance;
+      const decimals = 18;
+    
+      // Convert hexadecimal balance to a BigInt
+      const balanceBigInt = BigInt(balanceHex);
+    
+      // Create BigInt representation of 10^18 for decimals adjustment
+      const factor = BigInt(10 ** decimals);
+    
+      // Adjust for decimals
+      const adjustedBalance = balanceBigInt / factor;
+    
+      // .0001 pt per $NYC
+      const finalBalance = Number(adjustedBalance) * 0.0001;
+    
+      // Round the final balance to the nearest integer
+      const total_point = Math.round(finalBalance);
+    
       await stack.track("Swap - (any token) for $NYC", {
-        points: 250,
+        points: total_point,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified for task 7!');
+      console.log(`User qualified for ${total_point} points!`);
     } else {
       console.log('User not qualified for task 7!');
     }
-  
 
     return c.res({
       image: (
@@ -930,9 +965,9 @@ app.frame('/7th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 7 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 7 - .0001 pt per $NYC 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $NYC ]</p>
-          {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+          {tokenData && tokenData.data && tokenData.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -977,27 +1012,46 @@ app.frame('/8th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS || '';
 
-    // Get token transfers by contract from 1 - 28 April 2024 
-    const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
+    const responseTokenData = await fetch(`${baseUrlChainbase}/account/tokens?chain_id=8453&address=${eth_addresses}&contract_address=${contractAddress}&limit=1&page=1`, {
       headers: {
         'accept': 'application/json',
         'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
-
-    const userDataResponse = await responseUserData.json();
-
-    if (userDataResponse && userDataResponse.data && userDataResponse.data.length > 0) {
+    
+    const tokenData = await responseTokenData.json();
+    
+    if (tokenData && tokenData.data && tokenData.data.length > 0) {
+      // Given data
+      const balanceHex = tokenData.data[0].balance;
+      const decimals = 18;
+    
+      // Convert hexadecimal balance to a BigInt
+      const balanceBigInt = BigInt(balanceHex);
+    
+      // Create BigInt representation of 10^18 for decimals adjustment
+      const factor = BigInt(10 ** decimals);
+    
+      // Adjust for decimals
+      const adjustedBalance = balanceBigInt / factor;
+    
+      // .0001 pt per $CRASH
+      const finalBalance = Number(adjustedBalance) * 0.0001;
+    
+      // Round the final balance to the nearest integer
+      const total_point = Math.round(finalBalance);
+    
+      console.log(total_point);
+    
       await stack.track("Swap - (any token) for $CRASH", {
-        points: 250,
+        points: total_point,
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log('User qualified for task 8!');
+      console.log(`User qualified for ${total_point} points!`);
     } else {
       console.log('User not qualified for task 8!');
     }
-  
 
     return c.res({
       image: (
@@ -1038,9 +1092,9 @@ app.frame('/8th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 8 - 250 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 8 - .0001 pt per $CRASH 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $CRASH ]</p>
-          {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+          {tokenData && tokenData.data && tokenData.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -1305,6 +1359,7 @@ app.frame('/11th-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
+
 
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
