@@ -1339,8 +1339,9 @@ app.frame('/11th-quest', async (c) => {
 
       try {
         const res = await alchemy.core.getAssetTransfers({
+          fromBlock: "0x0",
           fromAddress: "0x5183e0203858aa3e3bc3a7d9cb41875a4c0a6216",
-          toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+          toAddress: "0x131642c019af815ae5f9926272a70c84ae5c37ab",
           excludeZeroValue: true,
           category: [AssetTransfersCategory.EXTERNAL],
         });
