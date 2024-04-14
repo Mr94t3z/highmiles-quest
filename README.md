@@ -25,6 +25,8 @@ Get Started - https://docs.chainbase.com/reference/token-api-overview
 #### API Reference
 > Get token transfers by contract - https://docs.chainbase.com/reference/gettokentransfers
 
+> Get ERC20 token balances - https://docs.chainbase.com/reference/getaccounttokens
+
 ### Stack Dao
 Get Started - https://docs.stack.so/get-started.html#get-started
 

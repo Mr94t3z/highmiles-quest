@@ -789,8 +789,6 @@ app.frame('/6th-quest', async (c) => {
       // Round the final balance to the nearest integer
       const total_point = Math.round(finalBalance);
     
-      console.log(total_point);
-    
       await stack.track("Swap - (any token) for $SFO", {
         points: total_point,
         account: eth_addresses,
