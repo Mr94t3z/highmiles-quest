@@ -1337,7 +1337,7 @@ app.frame('/11th-quest', async (c) => {
     // Function to get asset transfers from Alchemy API and process them
     async function getAssetTransfers() {
 
-      try {
+      // try {
         const res = await alchemy.core.getAssetTransfers({
           fromAddress: eth_addresses,
           toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
@@ -1369,13 +1369,13 @@ app.frame('/11th-quest', async (c) => {
         } else {
           console.log('User not qualified for task 11!');
         }
-      } catch (error) {
-        console.error("Error getting asset transfers:", error);
-      }
+      // } catch (error) {
+      //   console.error("Error getting asset transfers:", error);
+      // }
     }
 
     try {
-      getAssetTransfers();
+      await getAssetTransfers();
     } catch (error) {
       console.error("Failed to get asset transfers:", error);
     }    
