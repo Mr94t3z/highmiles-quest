@@ -44,6 +44,15 @@ const stack = new StackClient({
   pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
 });
 
+// Initialize Alchemy client
+const config = {
+  apiKey: process.env.ALCHEMY_API_KEY || 'demo',
+  network: Network.BASE_MAINNET,
+};
+
+const alchemy = new Alchemy(config);
+
+
 // Get the current date
 const currentDate = new Date();
 // Set the start dates of the range
@@ -1327,14 +1336,6 @@ app.frame('/11th-quest', async (c) => {
 
     // Function to get asset transfers from Alchemy API and process them
     async function getAssetTransfers() {
-
-      // Initialize Alchemy client
-      const config = {
-        apiKey: process.env.ALCHEMY_API_KEY || 'demo',
-        network: Network.BASE_MAINNET,
-      };
-
-      const alchemy = new Alchemy(config);
 
       try {
         const res = await alchemy.core.getAssetTransfers({
