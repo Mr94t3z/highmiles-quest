@@ -53,8 +53,10 @@ const endDateString = process.env.QUEST_END_DATE || '';
 const startDate = new Date(startDateString);
 // Get the month name from the start date
 const questMonth = startDate.toLocaleString('default', { month: 'long' });
-// Neynar API base URL
-const baseUrlNeynar = process.env.BASE_URL_NEYNAR;
+// Neynar API base URL V1
+const baseUrlNeynarV1 = process.env.BASE_URL_NEYNAR_V1;
+// Neynar API base URL V2
+const baseUrlNeynarV2 = process.env.BASE_URL_NEYNAR_V2;
 // Reservoir API base URL
 const baseUrlReservoir = process.env.BASE_URL_RESEVOIR;
 // Zora API base URL
@@ -150,7 +152,7 @@ app.frame('/1st-quest', async (c) => {
   const contractAddress = process.env.FIRST_QUEST_SMART_CONTRACT_ADDRESS || '';
 
   try {
-    const responseUserData = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const responseUserData = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -254,7 +256,7 @@ app.frame('/2nd-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -393,7 +395,7 @@ app.frame('/3rd-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -510,7 +512,7 @@ app.frame('/4th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -617,7 +619,7 @@ app.frame('/5th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -734,7 +736,7 @@ app.frame('/6th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -755,7 +757,7 @@ app.frame('/6th-quest', async (c) => {
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
       headers: {
         'accept': 'application/json',
-        'x-api-key': process.env.BASECHAIN_API_KEY || '',
+        'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
 
@@ -842,7 +844,7 @@ app.frame('/7th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -863,7 +865,7 @@ app.frame('/7th-quest', async (c) => {
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
       headers: {
         'accept': 'application/json',
-        'x-api-key': process.env.BASECHAIN_API_KEY || '',
+        'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
 
@@ -950,7 +952,7 @@ app.frame('/8th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -971,7 +973,7 @@ app.frame('/8th-quest', async (c) => {
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
       headers: {
         'accept': 'application/json',
-        'x-api-key': process.env.BASECHAIN_API_KEY || '',
+        'x-api-key': process.env.CHAINBASE_API_KEY || '',
       },
     });
 
@@ -1058,7 +1060,7 @@ app.frame('/9th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1142,7 +1144,7 @@ app.frame('/10th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1159,7 +1161,7 @@ app.frame('/10th-quest', async (c) => {
     const links = channels.map(channel => "https://warpcast.com/~/channel" + channel);
 
     const castResponses = await Promise.all(links.map(link => {
-      return fetch(`https://api.neynar.com/v1/farcaster/casts?fid=${userData.fid}&parent_url=${encodeURIComponent(link)}&viewerFid=${userData.fid}&limit=1`, {
+      return fetch(`${baseUrlNeynarV1}/casts?fid=${userData.fid}&parent_url=${encodeURIComponent(link)}&viewerFid=${userData.fid}&limit=1`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -1258,7 +1260,7 @@ app.frame('/11th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1460,7 +1462,7 @@ app.frame('/12th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1474,7 +1476,7 @@ app.frame('/12th-quest', async (c) => {
     // User must follow this fid - @boeing747
     const fidNeedToFollow = "388965";
 
-    const responseUserFollowing = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fidNeedToFollow}&viewer_fid=${userData.fid}`, {
+    const responseUserFollowing = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fidNeedToFollow}&viewer_fid=${userData.fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1568,7 +1570,7 @@ app.frame('/13th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1583,7 +1585,7 @@ app.frame('/13th-quest', async (c) => {
     const channelNeedToFollow = "747air";
 
     // Fetching channel data
-    const responseChannel = await fetch(`${baseUrlNeynar}/channel?id=${channelNeedToFollow}&viewer_fid=${userData.fid}`, {
+    const responseChannel = await fetch(`${baseUrlNeynarV2}/channel?id=${channelNeedToFollow}&viewer_fid=${userData.fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1678,7 +1680,7 @@ app.frame('/14th-quest', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
@@ -1776,7 +1778,7 @@ app.frame('/check-points', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   try {
-    const response = await fetch(`${baseUrlNeynar}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
