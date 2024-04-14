@@ -1,33 +1,45 @@
 import dotenv from 'dotenv';
-import { Alchemy, Network } from "alchemy-sdk";
 
 // Load environment variables from .env file
 dotenv.config();
 
-const config = {
-  apiKey: process.env.ALCHEMY_API_KEY || 'demo',
-  network: Network.BASE_MAINNET,
-};
-const alchemy = new Alchemy(config);
 
-async function getAssetTransfers() {
-  try {
-    const res = await alchemy.core.getAssetTransfers({
-      fromAddress: "0x5183E0203858aa3E3bc3A7D9cb41875a4c0A6216",
-      toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
-      excludeZeroValue: true,
-      category: ["external"],
-    });
-
-    // Loop through each transfer and process its hash
-    res.transfers.forEach(transfer => {
-      const hash = transfer.hash;
-      console.log("Hash:", hash);
-      // Add your logic to handle each hash here
-    });
-  } catch (error) {
-    console.error(error);
+const apiKey = process.env.ALCHEMY_API_KEY;
+fetch(`https://base-mainnet.g.alchemy.com/v2/${apiKey}`, {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    id: 1,
+    jsonrpc: "2.0",
+    method: "alchemy_getAssetTransfers",
+    params: [
+      {
+        fromBlock: "0x0",
+        toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+        withMetadata: true,
+        excludeZeroValue: true,
+        maxCount: "0x3e8",
+        category: ["external"],
+        fromAddress: "0x5183E0203858aa3E3bc3A7D9cb41875a4c0A6216"
+      }
+    ]
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
   }
-}
-
-getAssetTransfers();
+  return response.json();
+})
+.then(data => {
+  // Access the transfers array within the result object
+  const transfers = data.result.transfers;
+  // Map over the transfers array to extract hashes
+  const hashes = transfers.map(transfer => transfer.hash);
+  console.log("Hashes:", hashes);
+  return hashes;
+})
+.catch(error => console.error('Error:', error));
