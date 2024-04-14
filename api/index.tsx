@@ -656,7 +656,7 @@ app.frame('/5th-quest', async (c) => {
         
         // Iterate up to the minimum value between tokenCount and 10
         for (let i = 1; i <= iterations; i++) {
-          await stack.track(`Mint ${i} - Destinations! Boarding Pass`, {
+          await stack.track(`Mint ${i} - Destinations! Boarding Pass (up to 10 mints)`, {
             points: 2000,
             account: eth_addresses,
             uniqueId: eth_addresses
@@ -1375,7 +1375,7 @@ app.frame('/11th-quest', async (c) => {
   
           if (qualifiedTransactions.length > 0) {
               for (let i = 1; i <= qualifiedTransactions.length; i++) {
-                  await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames`, {
+                  await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames (up to 5 items)`, {
                       points: 747,
                       account: eth_addresses,
                       uniqueId: eth_addresses
@@ -1436,7 +1436,7 @@ app.frame('/11th-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 11 - 747 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames ]</p>
+          <p style={{ margin : 0 }}>[ Buy - 747 Gear from Warpshop Frames (up to 5 items) ]</p>
           {qualifiedTransactions && qualifiedTransactions.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
