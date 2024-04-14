@@ -725,7 +725,7 @@ app.frame('/5th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = "0xf143db60a0b1cbb8076b786eb6635b93f18db744";
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Token address
     const tokenAddress = process.env.PASSENGER_TICKET_AND_BAGGAGE_CHECK_TOKEN_ADDRESS || '';
