@@ -149,7 +149,7 @@ app.frame('/1st-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  const contractAddress = process.env.FIRST_QUEST_SMART_CONTRACT_ADDRESS || '';
+  const contractAddress = process.env.FORGE_X_747_AIRLINES_SMART_CONTRACT_ADDRESS || '';
 
   try {
     const responseUserData = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
@@ -266,9 +266,11 @@ app.frame('/2nd-quest', async (c) => {
     
     const data = await response.json();
     const userData = data.users[0];
+
+    const collectionAddress = process.env.COLLECTION_ADDRESS_747_AIRLINES || '';
     
     // Fetch token data
-    const responseTokenData = await fetch(`${baseUrlZora}/0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b?offset=0&limit=50&sort_key=CREATED&sort_direction=DESC`);
+    const responseTokenData = await fetch(`${baseUrlZora}/${collectionAddress}?offset=0&limit=50&sort_key=CREATED&sort_direction=DESC`);
     
     const tokenData = await responseTokenData.json();
     
@@ -527,7 +529,7 @@ app.frame('/4th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Token address
-    const tokenAddress = process.env.FOURTH_QUEST_TOKEN_ADDRESS || '';
+    const tokenAddress = process.env.IMAGINE_X_747_AIR_NFT_TOKEN_ADDRESS || '';
 
     // Get user tokens
     const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${tokenAddress}`, {
@@ -634,7 +636,7 @@ app.frame('/5th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Token address
-    const tokenAddress = process.env.SIXTH_QUEST_TOKEN_ADDRESS || '';
+    const tokenAddress = process.env.PASSENGER_TICKET_AND_BAGGAGE_CHECK_TOKEN_ADDRESS || '';
 
     // Get user tokens
     const responseUserData = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/tokens/v10?tokens=${tokenAddress}`, {
@@ -754,7 +756,7 @@ app.frame('/6th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Contract address
-    const contractAddress = process.env.SEVENTH_QUEST_SMART_CONTRACT_ADDRESS || '';
+    const contractAddress = process.env.SFO_SMART_CONTRACT_ADDRESS || '';
 
     // Get token transfers by contract from 1 - 28 April 2024 
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
@@ -765,6 +767,7 @@ app.frame('/6th-quest', async (c) => {
     });
 
     const userDataResponse = await responseUserData.json();
+
 
     if (userDataResponse && userDataResponse.data && userDataResponse.data.length > 0) {
       await stack.track("Swap - (any token) for $SFO", {
@@ -862,7 +865,7 @@ app.frame('/7th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Contract address
-    const contractAddress = process.env.EIGHTH_QUEST_SMART_CONTRACT_ADDRESS || '';
+    const contractAddress = process.env.NYC_SMART_CONTRACT_ADDRESS || '';
 
     // Get token transfers by contract from 1 - 28 April 2024 
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
@@ -970,7 +973,7 @@ app.frame('/8th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     // Contract address
-    const contractAddress = process.env.NINTH_QUEST_SMART_CONTRACT_ADDRESS || '';
+    const contractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS || '';
 
     // Get token transfers by contract from 1 - 28 April 2024 
     const responseUserData = await fetch(`${baseUrlChainbase}/token/transfers?chain_id=8453&contract_address=${contractAddress}&address=${eth_addresses}&from_timestamp=1711904400&end_timestamp=1714237200&page=1&limit=100`, {
@@ -1243,7 +1246,7 @@ app.frame('/10th-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button.Link href='https://warpcast.com/~/compose?text=&embeds[]=https://highmiles-quest.vercel.app/api/april'>Cast ⌁</Button.Link>,
+        <Button.Link href='https://crash-tipping.vercel.app/'>Tip ⌁</Button.Link>,
         <Button action='/10th-quest'>🔄 Refresh</Button>,
         <Button action='/9th-quest'>⏪ Back</Button>,
         <Button action='/11th-quest'>⏩️ Next</Button>,
@@ -1706,9 +1709,9 @@ app.frame('/14th-quest', async (c) => {
         account: eth_addresses,
         uniqueId: eth_addresses
       });
-      console.log("User has the plane emoji in their Warpcast Display Name.");
+      console.log("User have ✈️ on Display Name");
     } else {
-      console.log("User doesn't have the plane emoji in their Warpcast Display Name.");
+      console.log("User doesn't have ✈️ on Display Name");
     }
 
 
