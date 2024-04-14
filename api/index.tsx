@@ -1,7 +1,7 @@
 import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
 import { StackClient } from "@stackso/js-core";
-import { Alchemy, Network } from "alchemy-sdk";
+import { Alchemy, Network, AssetTransfersCategory } from "alchemy-sdk";
 import dotenv from 'dotenv';
 
 // Uncomment this packages to tested on local server
@@ -1329,25 +1329,22 @@ app.frame('/11th-quest', async (c) => {
     async function getAssetTransfers() {
 
       // Initialize Alchemy client
-      // const config = {
-      //   apiKey: process.env.ALCHEMY_API_KEY || '',
-      //   network: Network.BASE_MAINNET,
-      // };
+      const config = {
+        apiKey: process.env.ALCHEMY_API_KEY || 'demo',
+        network: Network.BASE_MAINNET,
+      };
 
-      // const alchemy = new Alchemy(config);
+      const alchemy = new Alchemy(config);
 
-      // try {
-        // const res = await alchemy.core.getAssetTransfers({
-        //   fromAddress: eth_addresses,
-        //   toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
-        //   excludeZeroValue: true,
-        //   category: ["external"] as any,
-        // });
+      try {
+        const res = await alchemy.core.getAssetTransfers({
+          fromAddress: eth_addresses,
+          toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
+          excludeZeroValue: true,
+          category: [AssetTransfersCategory.EXTERNAL],
+        });
     
-        const hashes = [
-          '0x81c805bbcc57e0184b2700e1ac5f66db84f69e949cb4b174f96e18b02b98ef11',
-          '0x8fe476c67616d6537f263b8d40c3b86e5aaededc390eb8a646c137cd70d0502f'
-        ];
+        const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
     
         for (const hash of hashes) {
           const transactionData = await getTransactionData(hash);
@@ -1371,9 +1368,9 @@ app.frame('/11th-quest', async (c) => {
         } else {
           console.log('User not qualified for task 11!');
         }
-      // } catch (error) {
-      //   console.error("Error getting asset transfers:", error);
-      // }
+      } catch (error) {
+        console.error("Error getting asset transfers:", error);
+      }
     }
 
     try {
