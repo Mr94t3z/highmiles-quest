@@ -1375,7 +1375,7 @@ app.frame('/11th-quest', async (c) => {
     }
 
     try {
-      await getAssetTransfers();
+      getAssetTransfers();
     } catch (error) {
       console.error("Failed to get asset transfers:", error);
     }    
