@@ -651,8 +651,11 @@ app.frame('/5th-quest', async (c) => {
       const tokenCount = userDataResponse.tokens[0].ownership.tokenCount;
 
       if (tokenCount > 0) {
-        // Iterate from 1 to the value of tokenCount and execute the corresponding code block
-        for (let i = 1; i <= tokenCount; i++) {
+        // Determine the number of iterations, considering the minimum between tokenCount and 10
+        const iterations = Math.min(tokenCount, 10);
+        
+        // Iterate up to the minimum value between tokenCount and 10
+        for (let i = 1; i <= iterations; i++) {
           await stack.track(`Mint ${i} - Destinations! Boarding Pass`, {
             points: 2000,
             account: eth_addresses,
@@ -707,7 +710,7 @@ app.frame('/5th-quest', async (c) => {
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
           <p style={{ fontSize: 30 }}>Task 5 - 2000 Points 🎖️</p>
-          <p style={{ margin : 0 }}>[ Mint - Destinations! Boarding Pass ]</p>
+          <p style={{ margin : 0 }}>[ Mint - Destinations! Boarding Pass (up to 10 mints) ]</p>
           {userDataResponse.tokens.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
