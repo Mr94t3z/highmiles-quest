@@ -574,6 +574,20 @@ app.frame('/4th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 3rd_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -603,6 +617,8 @@ app.frame('/4th-quest', async (c) => {
     const userDataResponse = await responseUserData.json();
 
     if (userDataResponse.tokens.length > 0) {
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, 777);
       await stack.track("Mint - Imagine x 747 Air NFT", {
         points: 777,
         account: eth_addresses,
