@@ -576,7 +576,7 @@ app.frame('/4th-quest', async (c) => {
 
   // Function to insert data into MySQL
   function insertDataIntoMySQL(address: any, points: any) {
-    const sql = `INSERT INTO 3rd_quest (address, points) VALUES (?, ?) 
+    const sql = `INSERT INTO 4th_quest (address, points) VALUES (?, ?) 
                 ON DUPLICATE KEY UPDATE points = VALUES(points)`;
     
     connection.query(sql, [address, points], (err) => {
@@ -697,6 +697,21 @@ app.frame('/5th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, pointsToAdd: number) {
+    const sql = `INSERT INTO 5th_quest (address, points)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE points = points + ?`;
+
+    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -710,7 +725,7 @@ app.frame('/5th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = "0xf143db60a0b1cbb8076b786eb6635b93f18db744";
 
     // Token address
     const tokenAddress = process.env.PASSENGER_TICKET_AND_BAGGAGE_CHECK_TOKEN_ADDRESS || '';
@@ -735,6 +750,8 @@ app.frame('/5th-quest', async (c) => {
         
         // Iterate up to the minimum value between tokenCount and 10
         for (let i = 1; i <= iterations; i++) {
+          // Insert data into database if user is qualified
+          insertDataIntoMySQL(eth_addresses, 2000);
           await stack.track(`Mint ${i} - Destinations! Boarding Pass (up to 10 mints)`, {
             points: 2000,
             account: eth_addresses,
