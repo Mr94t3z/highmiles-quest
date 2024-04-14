@@ -284,6 +284,20 @@ app.frame('/2nd-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 2st_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -341,6 +355,8 @@ app.frame('/2nd-quest', async (c) => {
     
       if (tokensMintedInApril.length === tokenData.results.length) {
         qualified = true;
+        // Insert data into database if user is qualified
+        insertDataIntoMySQL(eth_addresses, 1250);
         await stack.track("Mint - All 747 Airlines NFTs (made in April)", {
           points: 1250,
           account: eth_addresses,
