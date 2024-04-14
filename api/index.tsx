@@ -1344,7 +1344,22 @@ app.frame('/10th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  try {
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, pointsToAdd: number) {
+    const sql = `INSERT INTO 10th_quest (address, points)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE points = points + ?`;
+
+    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+        }
+    });
+  }
+
+  try { 
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
       headers: {
@@ -1405,6 +1420,9 @@ app.frame('/10th-quest', async (c) => {
             cast.channel.channelId === 'degen') && 
             cast.text.match(regex)
           ) {
+            // Insert data into database if user is qualified
+            insertDataIntoMySQL(eth_addresses, 10);
+    
             // Insert points for each cast
             await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
               points: 10,
