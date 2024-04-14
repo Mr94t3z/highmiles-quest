@@ -1267,7 +1267,7 @@ app.frame('/10th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 10 - 10 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip) ]</p>
-          {data.FarcasterCasts.Cast.length > 0 ? (
+          {data.FarcasterCasts.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
