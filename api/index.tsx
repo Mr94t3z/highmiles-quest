@@ -1337,15 +1337,19 @@ app.frame('/11th-quest', async (c) => {
     // Function to get asset transfers from Alchemy API and process them
     async function getAssetTransfers() {
 
-      // try {
+      try {
         const res = await alchemy.core.getAssetTransfers({
-          fromAddress: eth_addresses,
+          fromAddress: "0x5183e0203858aa3e3bc3a7d9cb41875a4c0a6216",
           toAddress: process.env.COINBASE_COMMERCE_SMART_CONTRACT_ADDRESS,
           excludeZeroValue: true,
           category: [AssetTransfersCategory.EXTERNAL],
         });
+
+        console.log("Asset transfers:", res);
     
         const hashes = res.transfers.map((transfer: { hash: any; }) => transfer.hash);
+
+        console.log("Hashes:", hashes);
     
         for (const hash of hashes) {
           const transactionData = await getTransactionData(hash);
@@ -1369,9 +1373,9 @@ app.frame('/11th-quest', async (c) => {
         } else {
           console.log('User not qualified for task 11!');
         }
-      // } catch (error) {
-      //   console.error("Error getting asset transfers:", error);
-      // }
+      } catch (error) {
+        console.error("Error getting asset transfers:", error);
+      }
     }
 
     try {
