@@ -191,8 +191,8 @@ app.frame('/1st-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = '0x130946d8dF113e45f44e13575012D0cFF1E53e37';
-
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    
     const responseUserCollected = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/collections/v4?collection=${contractAddress}`, {
       method: 'GET',
       headers: {
