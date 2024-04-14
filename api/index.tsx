@@ -1118,6 +1118,20 @@ app.frame('/8th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 8th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -1165,7 +1179,8 @@ app.frame('/8th-quest', async (c) => {
       // Round the final balance to the nearest integer
       const total_point = Math.round(finalBalance);
     
-      console.log(total_point);
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, total_point);
     
       await stack.track("Swap - (any token) for $CRASH", {
         points: total_point,
