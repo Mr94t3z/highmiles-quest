@@ -1314,7 +1314,7 @@ app.frame('/9th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 9 - 1500 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 9 - .001 pt per $1 🎖️</p>
           <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
           {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
@@ -1475,7 +1475,7 @@ app.frame('/10th-quest', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          <p style={{ fontSize: 30 }}>Task 10 - 10 Points 🎖️</p>
+          <p style={{ fontSize: 30 }}>Task 10 - 10 pt per tip 🎖️</p>
           <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip) ]</p>
           {data.FarcasterCasts.length > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
