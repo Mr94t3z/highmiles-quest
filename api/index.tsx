@@ -57,7 +57,6 @@ const connection = mysql.createConnection({
   port: parseInt(process.env.DB_PORT || ''),
 });
 
-
 // Get the current date
 const currentDate = new Date();
 // Set the start dates of the range
@@ -454,7 +453,7 @@ app.frame('/3rd-quest', async (c) => {
         }
     });
   }
-
+  
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -576,7 +575,7 @@ app.frame('/4th-quest', async (c) => {
 
   // Function to insert data into MySQL
   function insertDataIntoMySQL(address: any, points: any) {
-    const sql = `INSERT INTO 4th_quest (address, points) VALUES (?, ?) 
+    const sql = `INSERT INTO 4st_quest (address, points) VALUES (?, ?) 
                 ON DUPLICATE KEY UPDATE points = VALUES(points)`;
     
     connection.query(sql, [address, points], (err) => {
@@ -697,8 +696,8 @@ app.frame('/5th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL
-  function insertDataIntoMySQL(address: any, pointsToAdd: number) {
+  // Function to insert data into MySQL with Looping condition
+  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
     const sql = `INSERT INTO 5th_quest (address, points)
                 VALUES (?, ?)
                 ON DUPLICATE KEY UPDATE points = points + ?`;
@@ -751,7 +750,7 @@ app.frame('/5th-quest', async (c) => {
         // Iterate up to the minimum value between tokenCount and 10
         for (let i = 1; i <= iterations; i++) {
           // Insert data into database if user is qualified
-          insertDataIntoMySQL(eth_addresses, 2000);
+          insertDataIntoMySQLWithLooping(eth_addresses, 2000);
           await stack.track(`Mint ${i} - Destinations! Boarding Pass (up to 10 mints)`, {
             points: 2000,
             account: eth_addresses,
@@ -1344,8 +1343,8 @@ app.frame('/10th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL
-  function insertDataIntoMySQL(address: any, pointsToAdd: number) {
+  // Function to insert data into MySQL with Looping condition
+  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
     const sql = `INSERT INTO 10th_quest (address, points)
                 VALUES (?, ?)
                 ON DUPLICATE KEY UPDATE points = points + ?`;
@@ -1421,7 +1420,7 @@ app.frame('/10th-quest', async (c) => {
             cast.text.match(regex)
           ) {
             // Insert data into database if user is qualified
-            insertDataIntoMySQL(eth_addresses, 10);
+            insertDataIntoMySQLWithLooping(eth_addresses, 10);
     
             // Insert points for each cast
             await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
@@ -1505,6 +1504,21 @@ app.frame('/11th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL with Looping condition
+  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
+    const sql = `INSERT INTO 11th_quest (address, points)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE points = points + ?`;
+
+    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -1516,7 +1530,6 @@ app.frame('/11th-quest', async (c) => {
 
     const data = await response.json();
     const userData = data.users[0];
-
 
     // User connected wallet address
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
@@ -1619,6 +1632,9 @@ app.frame('/11th-quest', async (c) => {
   
           if (qualifiedTransactions.length > 0) {
               for (let i = 1; i <= qualifiedTransactions.length; i++) {
+                  // Insert data into database if user is qualified
+                  insertDataIntoMySQLWithLooping(eth_addresses, 747);
+
                   await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames (up to 5 items)`, {
                       points: 747,
                       account: eth_addresses,
@@ -1708,6 +1724,20 @@ app.frame('/12th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 12th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -1738,6 +1768,9 @@ app.frame('/12th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     if (userFollowing) {
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, 747);
+
       await stack.track("Follow - 747 Air on Warpcast", {
         points: 747,
         account: eth_addresses,
@@ -1816,6 +1849,20 @@ app.frame('/13th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 13th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -1848,6 +1895,9 @@ app.frame('/13th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     if (userFollowing) {
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, 747);
+
       await stack.track("Follow - 747 Air Channel on Warpcast", {
         points: 747,
         account: eth_addresses,
@@ -1926,6 +1976,20 @@ app.frame('/14th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 14th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -1945,6 +2009,9 @@ app.frame('/14th-quest', async (c) => {
     const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
     if (name.includes('✈️')) {
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, 747);
+
       await stack.track("Profile Cosmetic - Have ✈️ on Display Name", {
         points: 747,
         account: eth_addresses,
@@ -2024,6 +2091,20 @@ app.frame('/check-points', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO final_points (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -2044,6 +2125,11 @@ app.frame('/check-points', async (c) => {
     const rank = point.rank;
 
     const total_point = point.points;
+
+    if(total_point) {
+      // Insert data into database if user is qualified
+      insertDataIntoMySQL(eth_addresses, total_point);
+    }
 
     return c.res({
       image: (
