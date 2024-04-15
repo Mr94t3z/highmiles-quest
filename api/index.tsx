@@ -2105,6 +2105,45 @@ app.frame('/check-points', async (c) => {
     });
   }
 
+  // Function to query points by address from each quest table and calculate the total points
+  async function getPointsByAddress(address: string): Promise<number> {
+    let totalPoints = 0;
+
+    // Iterate through each quest table and sum up the points
+    for (let i = 1; i <= 14; i++) {
+      let tableName;
+      if (i === 1) {
+        tableName = '1st_quest';
+      } else if (i === 2) {
+        tableName = '2nd_quest';
+      } else if (i === 3) {
+        tableName = '3rd_quest';
+      } else {
+        tableName = `${i}th_quest`;
+      }
+
+      const query = `SELECT points FROM ${tableName} WHERE address = ?`;
+
+      await new Promise<void>((resolve, reject) => {
+        connection.query(query, [address], (err, results) => {
+          if (err) {
+            console.error(`Error querying points from ${tableName}:`, err);
+            reject(err);
+            return;
+          }
+
+          if (results.length > 0) {
+            totalPoints += results[0].points;
+          }
+
+          resolve();
+        });
+      });
+    }
+
+    return totalPoints;
+  }
+
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
       method: 'GET',
@@ -2127,8 +2166,11 @@ app.frame('/check-points', async (c) => {
     const total_point = point.points;
 
     if(total_point) {
-      // Insert data into database if user is qualified
-      insertDataIntoMySQL(eth_addresses, total_point);
+      // Get total points from all quest tables
+      const totalPoints = await getPointsByAddress(eth_addresses);
+
+      // Insert total points into the final_points table
+      insertDataIntoMySQL(eth_addresses, totalPoints);
     }
 
     return c.res({

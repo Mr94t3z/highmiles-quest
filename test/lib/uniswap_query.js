@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const poolAddress = "0xb6B2410fCbEe0584314af4F859b7B896616f2E51";
+const contract = "0xb6B2410fCbEe0584314af4F859b7B896616f2E51";
+
+const poolAddress = contract.toString().toLowerCase();
+
+console.log(poolAddress);
 
 async function fetchData() {
     try {
@@ -8,18 +12,26 @@ async function fetchData() {
             "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
             {
                 query: `
-                {
-                  mints(first: 1000, where: {pool: "${poolAddress}"}) {
-                    transaction {
-                      id
-                      mints {
-                        sender
-                        amount0
-                        amount1
+                  {
+                    swaps(orderBy: timestamp, orderDirection: desc, where:
+                    { pool: "0x621e87af48115122cd96209f820fe0445c2ea90e" }
+                    ) {
+                      pool {
+                        token0 {
+                          id
+                          symbol
+                        }
+                        token1 {
+                          id
+                          symbol
+                        }
                       }
+                      sender
+                      recipient
+                      amount0
+                      amount1
                     }
-                  }
-                }
+                    }
                 `
             },
             {
