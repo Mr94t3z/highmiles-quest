@@ -14,11 +14,14 @@
     "alchemy-sdk": "^3.2.1",
     "dotenv": "^16.4.5",
     "frog": "latest",
+    "graphql": "^16.8.1",
     "hono": "^4",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "web3": "^4.7.0"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.26",
+    "@types/web3": "^1.2.2",
     "tsx": "^4.7.1",
     "typescript": "^5.3.3",
     "vercel": "^34.0.0"

@@ -2,6 +2,7 @@ import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
 import { StackClient } from "@stackso/js-core";
 import { init, fetchQuery } from "@airstack/node";
+import { Web3 } from 'web3';
 import dotenv from 'dotenv';
 import mysql from 'mysql';
 
@@ -45,8 +46,11 @@ const stack = new StackClient({
   pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
 });
 
-// Initialize Airstack with your API key
+// Initialize Airstack with API key
 init(process.env.AIRSTACK_API_KEY || '');
+
+// Initialize the Web3 provider
+const web3 = new Web3(process.env.PROVIDER_URL);
 
 // Create a MySQL connection
 const connection = mysql.createConnection({
@@ -1254,10 +1258,25 @@ app.frame('/8th-quest', async (c) => {
   }
 });
 
-// 9th Quest - Skip
+// 9th Quest
 app.frame('/9th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
+
+  // Function to insert data into MySQL with Looping condition
+  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
+    const sql = `INSERT INTO 9th_quest (address, points)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE points = points + ?`;
+
+    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+        }
+    });
+  }
 
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
@@ -1272,8 +1291,92 @@ app.frame('/9th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    // const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
-  
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    const crashContractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS;
+    const poolsContractAddress = process.env.WETH_CRASH_POOLS_SMART_CONTRACT_ADDRESS;
+    
+    const responseTransaction = await fetch(`https://api.chainbase.online/v1/token/transfers?chain_id=8453&contract_address=${crashContractAddress}&address=${eth_addresses}&page=1&limit=100`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'x-api-key': 'demo'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const dataTransaction = await responseTransaction.json();
+
+    let totalPoint = 0;
+    
+    if (dataTransaction && dataTransaction.data && dataTransaction.data.length > 0) {
+      const filteredData = dataTransaction.data.filter((item: { to_address: string | undefined; }) => item.to_address === poolsContractAddress);
+      
+      if (filteredData.length > 0) {
+        const transactionHash = filteredData[0].transaction_hash;
+        
+        const txDetailResponse = await fetch(`https://api.chainbase.online/v1/tx/detail?chain_id=8453&hash=${transactionHash}`, {
+          method: 'GET',
+          headers: {
+            'accept': 'application/json',
+            'x-api-key': 'demo'
+          }
+        });
+
+        if (!txDetailResponse.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const detailData = await txDetailResponse.json();
+        const valueInWei = detailData.data.value;
+        const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
+
+        console.log('Total pools (ETH):', valueInEth);
+
+        const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+
+        if (!priceResponse.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const priceData = await priceResponse.json();
+
+        if (priceData && priceData.ethereum && priceData.ethereum.usd) {
+          const valueInUSD = Number(valueInEth) * priceData.ethereum.usd;
+          console.log('Total pools (USD):', valueInUSD);
+          
+          // .001 pt per $1
+          totalPoint = Math.floor(valueInUSD * 0.001);
+          console.log('Total point:', totalPoint);
+
+          if (totalPoint > 1) {
+
+              // Insert data into database if user is qualified
+              insertDataIntoMySQLWithLooping(eth_addresses, totalPoint);
+
+              await stack.track(`LP ${valueInEth} - $CRASH/$ETH for month of April`, {
+                points: totalPoint,
+                account: eth_addresses,
+                uniqueId: eth_addresses
+              });
+
+              console.log(`User qualified for ${totalPoint} points!`);
+
+          } else {
+            console.log(`User not qualified for ${totalPoint} points!`);
+          }
+        } else {
+          console.error('Price data is null or undefined.');
+        }
+      } else {
+        console.log('No transactions found with to_address matching poolsContractAddress.');
+      }
+    } else {
+      console.error('User does not have any transactions.');
+    }
 
     return c.res({
       image: (
@@ -1316,11 +1419,11 @@ app.frame('/9th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 9 - .001 pt per $1 🎖️</p>
           <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
-          {/* {userDataResponse && userDataResponse.data && userDataResponse.data.length > 0 ? (
+          {totalPoint > 1 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )} */}
+          )}
         </div>
       ),
       intents: [
