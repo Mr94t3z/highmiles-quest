@@ -1263,17 +1263,16 @@ app.frame('/9th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL with Looping condition
-  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
-    const sql = `INSERT INTO 9th_quest (address, points)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE points = points + ?`;
-
-    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 9th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
         } else {
-            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+            console.log('Data inserted into MySQL for address:', address);
         }
     });
   }
@@ -1309,74 +1308,77 @@ app.frame('/9th-quest', async (c) => {
     }
 
     const dataTransaction = await responseTransaction.json();
-
-    let totalPoint = 0;
+  
+    let totalPointsEarned = 0;
     
     if (dataTransaction && dataTransaction.data && dataTransaction.data.length > 0) {
-      const filteredData = dataTransaction.data.filter((item: { to_address: string | undefined; }) => item.to_address === poolsContractAddress);
-      
-      if (filteredData.length > 0) {
-        const transactionHash = filteredData[0].transaction_hash;
-        
-        const txDetailResponse = await fetch(`https://api.chainbase.online/v1/tx/detail?chain_id=8453&hash=${transactionHash}`, {
-          method: 'GET',
-          headers: {
-            'accept': 'application/json',
-            'x-api-key': 'demo'
-          }
-        });
-
-        if (!txDetailResponse.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const detailData = await txDetailResponse.json();
-        const valueInWei = detailData.data.value;
-        const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
-
-        console.log('Total pools (ETH):', valueInEth);
-
-        const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-
-        if (!priceResponse.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const priceData = await priceResponse.json();
-
-        if (priceData && priceData.ethereum && priceData.ethereum.usd) {
-          const valueInUSD = Number(valueInEth) * priceData.ethereum.usd;
-          console.log('Total pools (USD):', valueInUSD);
-          
-          // .001 pt per $1
-          totalPoint = Math.floor(valueInUSD * 0.001);
-          console.log('Total point:', totalPoint);
-
-          if (totalPoint > 1) {
-
-              // Insert data into database if user is qualified
-              insertDataIntoMySQLWithLooping(eth_addresses, totalPoint);
-
-              await stack.track(`LP ${valueInEth} - $CRASH/$ETH for month of April`, {
-                points: totalPoint,
-                account: eth_addresses,
-                uniqueId: eth_addresses
+      const filteredTransactions = dataTransaction.data.filter((item: { to_address: string | undefined; }) => item.to_address === poolsContractAddress);
+      const transactionHashes = filteredTransactions.map((transaction: { transaction_hash: any; }) => transaction.transaction_hash);
+  
+      let transactionCounter = 1;
+      for (const transactionHash of transactionHashes) {
+          try {
+              // Fetch transaction details
+              const txDetailResponse = await fetch(`https://api.chainbase.online/v1/tx/detail?chain_id=8453&hash=${transactionHash}`, {
+                  method: 'GET',
+                  headers: {
+                      'accept': 'application/json',
+                      'x-api-key': 'demo'
+                  }
               });
+  
+              if (!txDetailResponse.ok) {
+                  throw new Error('Network response was not ok');
+              }
+  
+              const detailData = await txDetailResponse.json();
+              const valueInWei = detailData.data.value;
+              const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
+  
+              // Fetch current price of Ether in USD from CoinGecko API
+              const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+  
+              if (!priceResponse.ok) {
+                  throw new Error('Failed to fetch price data from CoinGecko API');
+              }
+  
+              const priceData = await priceResponse.json();
+  
+              if (priceData && priceData.ethereum && priceData.ethereum.usd) {
+                  const etherPriceInUSD = priceData.ethereum.usd;
+                  const valueInUSD = Number(valueInEth) * etherPriceInUSD;
+                  const totalPoint = Math.floor(valueInUSD * 0.001);
+  
+                  // Add points earned from current transaction to total points
+                  totalPointsEarned += totalPoint;
 
-              console.log(`User qualified for ${totalPoint} points!`);
-
-          } else {
-            console.log(`User not qualified for ${totalPoint} points!`);
+                  if (totalPointsEarned > 0) {
+                    // Insert data into database if user is qualified
+                    insertDataIntoMySQL(eth_addresses, totalPointsEarned);
+    
+                    // Track points for each transaction
+                    await stack.track(`LP ${valueInEth} - $CRASH/$ETH for month of April on Tx : [ ${transactionHash} ]`, {
+                        points: totalPoint,
+                        account: eth_addresses,
+                        uniqueId: eth_addresses
+                    });
+                    console.log(`Added ${totalPoint} points for transaction ${transactionCounter}`);
+                  } else {
+                    console.log(`User not qualified for transaction ${transactionCounter}`);
+                  }
+              } else {
+                  console.error('Failed to get valid price data for Ethereum from CoinGecko API');
+              }
+  
+              transactionCounter++;
+          } catch (error) {
+              console.error(`Error fetching transaction details for transaction ${transactionCounter}:`, error);
           }
-        } else {
-          console.error('Price data is null or undefined.');
-        }
-      } else {
-        console.log('No transactions found with to_address matching poolsContractAddress.');
       }
-    } else {
-      console.error('User does not have any transactions.');
+        // Log total points earned after processing all transactions
+        console.log('Total points earned from all transactions:', totalPointsEarned);
     }
+  
 
     return c.res({
       image: (
@@ -1419,10 +1421,10 @@ app.frame('/9th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 9 - .001 pt per $1 🎖️</p>
           <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
-          {totalPoint > 1 ? (
-            <p style={{ fontSize: 24 }}>Completed ✅</p>
+          {totalPointsEarned > 0 ? (
+              <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
-            <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+              <p style={{ fontSize: 24 }}>Not qualified ❌</p>
           )}
         </div>
       ),
