@@ -1265,183 +1265,187 @@ app.frame('/9th-quest', async (c) => {
 
   // Function to insert data into MySQL
   function insertDataIntoMySQL(address: any, points: any) {
-    const sql = `INSERT INTO 9th_quest (address, points) VALUES (?, ?) 
-                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
-    
-    connection.query(sql, [address, points], (err) => {
-        if (err) {
-            console.error('Error inserting data into MySQL:', err);
-        } else {
-            console.log('Data inserted into MySQL for address:', address);
-        }
-    });
+      const sql = `INSERT INTO 9th_quest (address, points) VALUES (?, ?) 
+                  ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+
+      connection.query(sql, [address, points], (err) => {
+          if (err) {
+              console.error('Error inserting data into MySQL:', err);
+          } else {
+              console.log('Data inserted into MySQL for address:', address);
+          }
+      });
   }
 
   try {
-    const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
-      method: 'GET',
-      headers: {
-        'accept': 'application/json',
-        'api_key': process.env.NEYNAR_API_KEY || '',
-      },
-    });
+      const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
+          method: 'GET',
+          headers: {
+              'accept': 'application/json',
+              'api_key': process.env.NEYNAR_API_KEY || '',
+          },
+      });
 
-    const data = await response.json();
-    const userData = data.users[0];
+      const data = await response.json();
+      const userData = data.users[0];
 
-    // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+      // User connected wallet address
+      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    const crashContractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS;
-    const poolsContractAddress = process.env.WETH_CRASH_POOLS_SMART_CONTRACT_ADDRESS;
-    
-    const responseTransaction = await fetch(`https://api.chainbase.online/v1/token/transfers?chain_id=8453&contract_address=${crashContractAddress}&address=${eth_addresses}&page=1&limit=100`, {
-      method: 'GET',
-      headers: {
-        'accept': 'application/json',
-        'x-api-key': 'demo'
-      }
-    });
+      const crashContractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS;
+      const poolsContractAddress = process.env.WETH_CRASH_POOLS_SMART_CONTRACT_ADDRESS;
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const dataTransaction = await responseTransaction.json();
-  
-    let totalPointsEarned = 0;
-    
-    if (dataTransaction && dataTransaction.data && dataTransaction.data.length > 0) {
-      const filteredTransactions = dataTransaction.data.filter((item: { to_address: string | undefined; }) => item.to_address === poolsContractAddress);
-      const transactionHashes = filteredTransactions.map((transaction: { transaction_hash: any; }) => transaction.transaction_hash);
-  
-      let transactionCounter = 1;
-      for (const transactionHash of transactionHashes) {
-          try {
-              // Fetch transaction details
-              const txDetailResponse = await fetch(`https://api.chainbase.online/v1/tx/detail?chain_id=8453&hash=${transactionHash}`, {
-                  method: 'GET',
-                  headers: {
-                      'accept': 'application/json',
-                      'x-api-key': 'demo'
-                  }
-              });
-  
-              if (!txDetailResponse.ok) {
-                  throw new Error('Network response was not ok');
-              }
-  
-              const detailData = await txDetailResponse.json();
-              const valueInWei = detailData.data.value;
-              const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
-  
-              // Fetch current price of Ether in USD from CoinGecko API
-              const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-  
-              if (!priceResponse.ok) {
-                  throw new Error('Failed to fetch price data from CoinGecko API');
-              }
-  
-              const priceData = await priceResponse.json();
-  
-              if (priceData && priceData.ethereum && priceData.ethereum.usd) {
-                  const etherPriceInUSD = priceData.ethereum.usd;
-                  const valueInUSD = Number(valueInEth) * etherPriceInUSD;
-                  const totalPoint = Math.floor(valueInUSD * 0.001);
-  
-                  // Add points earned from current transaction to total points
-                  totalPointsEarned += totalPoint;
-
-                  if (totalPointsEarned > 0) {
-                    // Insert data into database if user is qualified
-                    insertDataIntoMySQL(eth_addresses, totalPointsEarned);
-    
-                    // Track points for each transaction
-                    await stack.track(`LP ${valueInEth} - $CRASH/$ETH for month of April on Tx : [ ${transactionHash} ]`, {
-                        points: totalPoint,
-                        account: eth_addresses,
-                        uniqueId: eth_addresses
-                    });
-                    console.log(`Added ${totalPoint} points for transaction ${transactionCounter}`);
-                  } else {
-                    console.log(`User not qualified for transaction ${transactionCounter}`);
-                  }
-              } else {
-                  console.error('Failed to get valid price data for Ethereum from CoinGecko API');
-              }
-  
-              transactionCounter++;
-          } catch (error) {
-              console.error(`Error fetching transaction details for transaction ${transactionCounter}:`, error);
+      const responseTransaction = await fetch(`https://api.chainbase.online/v1/token/transfers?chain_id=8453&contract_address=${crashContractAddress}&address=${eth_addresses}&page=1&limit=100`, {
+          method: 'GET',
+          headers: {
+              'accept': 'application/json',
+              'x-api-key': 'demo'
           }
-      }
-        // Log total points earned after processing all transactions
-        console.log('Total points earned from all transactions:', totalPointsEarned);
-    }
-  
+      });
 
-    return c.res({
-      image: (
-        <div
-          style={{
-            alignItems: 'center',
-            background: '#1A30FF',
-            backgroundSize: '100% 100%',
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'nowrap',
-            height: '100%',
-            justifyContent: 'center',
-            textAlign: 'center',
-            width: '100%',
-            color: 'white',
-            fontFamily: 'Space Mono',
-            fontSize: 35,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 0,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
-              src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-              }}
-              width={200} 
-              height={200} 
-            />
-            <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
-          </div>
-          <p style={{ fontSize: 30 }}>Task 9 - .001 pt per $1 🎖️</p>
-          <p style={{ margin : 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
-          {totalPointsEarned > 0 ? (
-              <p style={{ fontSize: 24 }}>Completed ✅</p>
-          ) : (
-              <p style={{ fontSize: 24 }}>Not qualified ❌</p>
-          )}
-        </div>
-      ),
-      intents: [
-        <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
-        <Button action='/9th-quest'>🔄 Refresh</Button>,
-        <Button action='/8th-quest'>⏪ Back</Button>,
-        <Button action='/10th-quest'>⏩️ Next</Button>,
-      ],
-    });
+      const dataTransaction = await responseTransaction.json();
+
+      if (!dataTransaction || dataTransaction.data === null || dataTransaction.count === 0) {
+          console.log('No transaction data available!');
+      }
+
+      let totalPointsEarned = 0;
+
+      if (dataTransaction && dataTransaction.data && dataTransaction.data.length > 0) {
+          const filteredTransactions = dataTransaction.data.filter((item: { to_address: string | undefined; }) => item.to_address === poolsContractAddress);
+
+          const transactionHashes = filteredTransactions.map((transaction: { transaction_hash: any; }) => transaction.transaction_hash);
+
+          let transactionCounter = 1;
+          for (const transactionHash of transactionHashes) {
+              try {
+                  console.log(`Processing transaction hash ${transactionCounter}: ${transactionHash}`);
+                  // Fetch transaction details
+                  const txDetailResponse = await fetch(`https://api.chainbase.online/v1/tx/detail?chain_id=8453&hash=${transactionHash}`, {
+                      method: 'GET',
+                      headers: {
+                          'accept': 'application/json',
+                          'x-api-key': 'demo'
+                      }
+                  });
+
+                  if (!txDetailResponse.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+
+                  const detailData = await txDetailResponse.json();
+                  const valueInWei = detailData.data.value;
+                  const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
+
+                  // Fetch current price of Ether in USD from CoinGecko API
+                  const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+
+                  if (!priceResponse.ok) {
+                      throw new Error('Failed to fetch price data from CoinGecko API');
+                  }
+
+                  const priceData = await priceResponse.json();
+
+                  if (priceData && priceData.ethereum && priceData.ethereum.usd) {
+                      const etherPriceInUSD = priceData.ethereum.usd;
+                      const valueInUSD = Number(valueInEth) * etherPriceInUSD;
+                      const totalPoint = Math.floor(valueInUSD * 0.001);
+
+                      // Add points earned from current transaction to total points
+                      totalPointsEarned += totalPoint;
+
+                      // Insert data into database if user is qualified
+                      insertDataIntoMySQL(eth_addresses, totalPointsEarned);
+
+                      if (totalPointsEarned > 0) {
+
+                          // Track points for each transaction
+                          await stack.track(`LP ${valueInEth} - $CRASH/$ETH for month of April on Tx : [ ${transactionHash} ]`, {
+                              points: totalPoint,
+                              account: eth_addresses,
+                              uniqueId: eth_addresses
+                          });
+                          console.log(`Added ${totalPoint} points for transaction ${transactionCounter}`);
+                      } else {
+                          console.log(`User not qualified for transaction ${transactionCounter}`);
+                      }
+                  } else {
+                      console.error('Failed to get valid price data for Ethereum from CoinGecko API');
+                  }
+
+                  transactionCounter++;
+              } catch (error) {
+                  console.error(`Error fetching transaction details for transaction ${transactionCounter}:`, error);
+              }
+          }
+          // Log total points earned after processing all transactions
+          console.log('Total points earned from all transactions:', totalPointsEarned);
+      }
+
+
+      return c.res({
+          image: (
+              <div
+                  style={{
+                      alignItems: 'center',
+                      background: '#1A30FF',
+                      backgroundSize: '100% 100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexWrap: 'nowrap',
+                      height: '100%',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '100%',
+                      color: 'white',
+                      fontFamily: 'Space Mono',
+                      fontSize: 35,
+                      fontStyle: 'normal',
+                      letterSpacing: '-0.025em',
+                      lineHeight: 1.4,
+                      marginTop: 0,
+                      padding: '0 120px',
+                      whiteSpace: 'pre-wrap',
+                  }}
+              >
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img
+                          src={userData.pfp_url.toLowerCase().endsWith('.webp') ? '/images/no_avatar.png' : userData.pfp_url}
+                          style={{
+                              width: 100,
+                              height: 100,
+                              borderRadius: 100,
+                              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+                          }}
+                          width={200}
+                          height={200}
+                      />
+                      <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
+                  </div>
+                  <p style={{ fontSize: 30 }}>Task 9 - .001 pt per $1 🎖️</p>
+                  <p style={{ margin: 0 }}>[ LP - $CRASH/$ETH for month of April ]</p>
+                  {totalPointsEarned > 0 ? (
+                      <p style={{ fontSize: 24 }}>Completed ✅</p>
+                  ) : (
+                      <p style={{ fontSize: 24 }}>Not qualified ❌</p>
+                  )}
+              </div>
+          ),
+          intents: [
+              <Button.Link href='https://app.uniswap.org/explore/pools/base/0xb6B2410fCbEe0584314af4F859b7B896616f2E51'>Add LP ⌁</Button.Link>,
+              <Button action='/9th-quest'>🔄 Refresh</Button>,
+              <Button action='/8th-quest'>⏪ Back</Button>,
+              <Button action='/10th-quest'>⏩️ Next</Button>,
+          ],
+      });
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      console.error('Error fetching user data:', error);
+      return c.res({
+          image: <div style={{ color: 'red' }}>An error occurred.</div>,
+      });
   }
 });
+
 
 // 10th Quest
 app.frame('/10th-quest', async (c) => {
