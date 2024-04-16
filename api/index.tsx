@@ -704,17 +704,18 @@ app.frame('/5th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL with Looping condition
-  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
-    const sql = `INSERT INTO 5th_quest (address, points)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE points = points + ?`;
+  let totalPointsEarned = 0;
 
-    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 5th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+    
+    connection.query(sql, [address, points], (err) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
         } else {
-            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+            console.log('Data inserted into MySQL for address:', address);
         }
     });
   }
@@ -757,13 +758,17 @@ app.frame('/5th-quest', async (c) => {
         
         // Iterate up to the minimum value between tokenCount and 10
         for (let i = 1; i <= iterations; i++) {
-          // Insert data into database if user is qualified
-          insertDataIntoMySQLWithLooping(eth_addresses, 2000);
+
+          // Add points earned for each mint
+          totalPointsEarned += 2000;
+          
           await stack.track(`Mint ${i} - Destinations! Boarding Pass (up to 10 mints)`, {
             points: 2000,
             account: eth_addresses,
             uniqueId: eth_addresses
           });
+          // Insert data into database if user is qualified
+          insertDataIntoMySQL(eth_addresses, totalPointsEarned);
           console.log(`User qualified for ${i} tokens!`);
         }
       } else {
@@ -814,7 +819,7 @@ app.frame('/5th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 5 - 2000 Points 🎖️</p>
           <p style={{ margin : 0 }}>[ Mint - Destinations! Boarding Pass (up to 10 mints) ]</p>
-          {userDataResponse.tokens.length > 0 ? (
+          {totalPointsEarned > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -1579,17 +1584,16 @@ app.frame('/10th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL with Looping condition
-  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
-    const sql = `INSERT INTO 10th_quest (address, points)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE points = points + ?`;
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 10th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
 
-    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+    connection.query(sql, [address, points], (err) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
         } else {
-            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+            console.log('Data inserted into MySQL for address:', address);
         }
     });
   }
@@ -1636,41 +1640,47 @@ app.frame('/10th-quest', async (c) => {
 
     const { data, error } = await fetchQuery(query);
 
+    let totalPointsEarned = 0; // Declare totalPointsEarned outside of the else block
+
     if (error) {
-      console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error);
     } else {
-      // Check if data is null or empty
-      if (!data || !data.FarcasterCasts || data.FarcasterCasts.Cast.length === 0) {
-        console.log("No found cast tip for this user.");
-      } else {
-        const regex = /\b\d+\s?\$crash\b/gi; // Regular expression to match "{amount} $crash" or "{amount} $CRASH" or "{amount} $Crash"
-        let claim_amount = 1;
-        for (const cast of data.FarcasterCasts.Cast) {
-          if (
-            cast.channel && 
-            (cast.channel.channelId === '747air' ||
-            cast.channel.channelId === 'higher' || 
-            cast.channel.channelId === 'imagine' || 
-            cast.channel.channelId === 'enjoy' || 
-            cast.channel.channelId === 'degen') && 
-            cast.text.match(regex)
-          ) {
-            // Insert data into database if user is qualified
-            insertDataIntoMySQLWithLooping(eth_addresses, 10);
-    
-            // Insert points for each cast
-            await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
-              points: 10,
-              account: eth_addresses,
-              uniqueId: eth_addresses
-            });
-            console.log(`Found ${claim_amount} cast tip for this user.`);
-            claim_amount++;
-            if (claim_amount > 50) break;
+        // Check if data is null or empty
+        if (!data || !data.FarcasterCasts || data.FarcasterCasts.Cast.length === 0) {
+            console.log("No found cast tip for this user.");
+        } else {
+            const regex = /\b\d+\s?\$crash\b/gi; // Regular expression to match "{amount} $crash" or "{amount} $CRASH" or "{amount} $Crash"
+            let claim_amount = 1;
+            for (const cast of data.FarcasterCasts.Cast) {
+                if (
+                    cast.channel &&
+                    (cast.channel.channelId === '747air' ||
+                    cast.channel.channelId === 'higher' ||
+                    cast.channel.channelId === 'imagine' ||
+                    cast.channel.channelId === 'enjoy' ||
+                    cast.channel.channelId === 'degen') &&
+                    cast.text.match(regex)
+                ) {
+                    // Add points earned for each cast
+                    totalPointsEarned += 10;
+
+                    // Insert points for each cast
+                    await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
+                        points: 10,
+                        account: eth_addresses,
+                        uniqueId: eth_addresses
+                    });
+                    console.log(`Found ${claim_amount} cast tip for this user.`);
+                    claim_amount++;
+
+                    if (claim_amount > 50) break;
+                }
+            }
+            // Insert totalPointsEarned into MySQL
+            insertDataIntoMySQL(eth_addresses, totalPointsEarned); 
+            console.log('Total points earned:', totalPointsEarned);
           }
-        }
       }
-    }
 
     return c.res({
       image: (
@@ -1713,7 +1723,7 @@ app.frame('/10th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 10 - 10 pt per tip 🎖️</p>
           <p style={{ margin : 0 }}>[ Tip - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip) ]</p>
-          {data.FarcasterCasts.length > 0 ? (
+          {totalPointsEarned > 0 ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -1740,17 +1750,16 @@ app.frame('/11th-quest', async (c) => {
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
-  // Function to insert data into MySQL with Looping condition
-  function insertDataIntoMySQLWithLooping(address: any, pointsToAdd: number) {
-    const sql = `INSERT INTO 11th_quest (address, points)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE points = points + ?`;
+  // Function to insert data into MySQL
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO 11th_quest (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
 
-    connection.query(sql, [address, pointsToAdd, pointsToAdd], (err) => {
+    connection.query(sql, [address, points], (err) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
         } else {
-            console.log(`Data inserted into MySQL for address ${address}. Points added: ${pointsToAdd}`);
+            console.log('Data inserted into MySQL for address:', address);
         }
     });
   }
@@ -1867,9 +1876,12 @@ app.frame('/11th-quest', async (c) => {
           }
   
           if (qualifiedTransactions.length > 0) {
+              let totalPointsEarned = 0; // Initialize total points earned
+            
               for (let i = 1; i <= qualifiedTransactions.length; i++) {
-                  // Insert data into database if user is qualified
-                  insertDataIntoMySQLWithLooping(eth_addresses, 747);
+
+                  // Add points for each transaction
+                  totalPointsEarned += 747;
 
                   await stack.track(`Buy ${i} - 747 Gear from Warpshop Frames (up to 5 items)`, {
                       points: 747,
@@ -1878,6 +1890,10 @@ app.frame('/11th-quest', async (c) => {
                   });
                   console.log(`User qualified for transaction ${i}!`);
               }
+              // Insert the total points earned into the database
+              insertDataIntoMySQL(eth_addresses, totalPointsEarned);
+
+              console.log('Total points earned:', totalPointsEarned);
           } else {
               console.log('User not qualified for task 11!');
           }
