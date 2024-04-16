@@ -2,7 +2,7 @@ var { graphql, buildSchema } = require("graphql")
  
 var schema = buildSchema(`
     {
-    positions(where: { owner: "0x130946d8df113e45f44e13575012d0cff1e53e37", pool: "0xb6b2410fcbee0584314af4f859b7b896616f2e51" }) {
+    positions(where: { owner: "0x130946d8dF113e45f44e13575012D0cFF1E53e37", pool: "0xb6B2410fCbEe0584314af4F859b7B896616f2E51" }) {
       id
       liquidity
       token0 {

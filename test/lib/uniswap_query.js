@@ -14,7 +14,7 @@ async function fetchData() {
                 query: `
                   {
                     swaps(orderBy: timestamp, orderDirection: desc, where:
-                    { pool: "0x621e87af48115122cd96209f820fe0445c2ea90e" }
+                    { pool: "0x621E87AF48115122Cd96209F820fE0445C2ea90e" }
                     ) {
                       pool {
                         token0 {
