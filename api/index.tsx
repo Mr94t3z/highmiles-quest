@@ -904,7 +904,7 @@ app.frame('/6th-quest', async (c) => {
       }
       const data = await response.json();
       if (!data || !data.data || data.data.length === 0) {
-        console.log('User not qualified for task 8!');
+        console.log('User not qualified for task 6!');
         return false; // Indicate that the user is not qualified
       }
 
@@ -952,8 +952,7 @@ app.frame('/6th-quest', async (c) => {
 
       return true; // Indicate that the user is qualified
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+    .catch(() => {
       return false; // Indicate that the user is not qualified
     });
 
@@ -1136,8 +1135,7 @@ app.frame('/7th-quest', async (c) => {
 
       return true; // Indicate that the user is qualified
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+    .catch(() => {
       return false; // Indicate that the user is not qualified
     });
 
@@ -1320,8 +1318,7 @@ app.frame('/8th-quest', async (c) => {
 
       return true; // Indicate that the user is qualified
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+    .catch(() => {
       return false; // Indicate that the user is not qualified
     });
 
