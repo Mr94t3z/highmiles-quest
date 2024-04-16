@@ -9,7 +9,7 @@ const apiUrl = 'https://api.chainbase.online/v1/token/transfers';
 const params = new URLSearchParams({
     chain_id: '8453',
     contract_address: contractAddress,
-    address: '0x1D6ecA43FdeeC18a7B3B96669016712e2CbdfB64',
+    address: '0x130946d8dF113e45f44e13575012D0cFF1E53e37',
     from_timestamp: '1679811200', // 1st April 2024
     end_timestamp: '1680681600', // 28th April 2024
     page: '1',
@@ -44,9 +44,13 @@ fetch(`${apiUrl}?${params}`, { headers })
         // Extract the data from the response
         const transfers = data.data;
 
+        const wallet = '0x130946d8dF113e45f44e13575012D0cFF1E53e37'
+        
+        const eth_addreses = wallet.toString().toLowerCase();
+        
         // Filter the transfers based on the specified addresses
         const filteredTransfers = transfers.filter(transfer =>
-            transfer.to_address === '0x1D6ecA43FdeeC18a7B3B96669016712e2CbdfB64'
+            transfer.to_address === eth_addreses
         );
 
         if (filteredTransfers.length === 0) {
