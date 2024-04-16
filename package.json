@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@airstack/node": "^0.0.6",
+    "@moralisweb3/common-evm-utils": "^2.25.4",
     "@neynar/nodejs-sdk": "^1.18.0",
     "@stackso/js-core": "^0.2.21",
     "alchemy-sdk": "^3.2.1",
@@ -16,6 +17,7 @@
     "frog": "latest",
     "graphql": "^16.8.1",
     "hono": "^4",
+    "moralis": "^2.25.4",
     "mysql": "^2.18.1",
     "web3": "^4.7.0"
   },
