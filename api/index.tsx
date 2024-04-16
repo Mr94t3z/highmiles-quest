@@ -79,6 +79,8 @@ const baseUrlReservoir = process.env.BASE_URL_RESEVOIR;
 const baseUrlZora = process.env.BASE_URL_ZORA;
 // Chainbase API base URL
 const baseUrlChainbase = process.env.BASE_URL_CHAINBASE;
+// Chainbase API key
+const chainBaseApiKey = process.env.CHAINBASE_API_KEY || '';
 // Coingecko API base URL
 const baseUrlCoingecko = process.env.BASE_URL_COINGECKO;
 // Leaderboard URL
@@ -871,47 +873,89 @@ app.frame('/6th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.SFO_SMART_CONTRACT_ADDRESS || '';
 
-    const responseTokenData = await fetch(`${baseUrlChainbase}/account/tokens?chain_id=8453&address=${eth_addresses}&contract_address=${contractAddress}&limit=1&page=1`, {
-      headers: {
-        'accept': 'application/json',
-        'x-api-key': process.env.CHAINBASE_API_KEY || '',
-      },
+    // Define parameters
+    const params = new URLSearchParams({
+        chain_id: '8453',
+        contract_address: contractAddress,
+        address: eth_addresses,
+        from_timestamp: '1679811200', // 1st April 2024
+        end_timestamp: '1680681600', // 28th April 2024
+        page: '1',
+        limit: '100'
     });
-    
-    const tokenData = await responseTokenData.json();
-    
-    if (tokenData && tokenData.data && tokenData.data.length > 0) {
-      // Given data
-      const balanceHex = tokenData.data[0].balance;
-      const decimals = 18;
-    
-      // Convert hexadecimal balance to a BigInt
-      const balanceBigInt = BigInt(balanceHex);
-    
-      // Create BigInt representation of 10^18 for decimals adjustment
-      const factor = BigInt(10 ** decimals);
-    
-      // Adjust for decimals
-      const adjustedBalance = balanceBigInt / factor;
-    
-      // .0001 pt per $SF0
-      const finalBalance = Number(adjustedBalance) * 0.0001;
-    
-      // Round the final balance to the nearest integer
-      const total_point = Math.round(finalBalance);
+    const headers = {
+        'Accept': 'application/json',
+        'x-api-key': chainBaseApiKey
+    };
 
-      // Insert data into database if user is qualified
-      insertDataIntoMySQL(eth_addresses, total_point);
-    
-      await stack.track("Swap - (any token) for $SFO", {
-        points: total_point,
-        account: eth_addresses,
-        uniqueId: eth_addresses
-      });
-      console.log(`User qualified for ${total_point} points!`);
-    } else {
-      console.log('User not qualified for task 6!');
+    // Function to convert raw token value to human-readable format
+    function convertValueToReadable(rawValue: string | number | bigint | boolean, decimals: string | number | bigint | boolean) {
+        const rawBigInt = BigInt(rawValue);
+        const divisor = BigInt(10) ** BigInt(decimals);
+        const readableValue = rawBigInt / divisor;
+        return readableValue.toString();
     }
+
+    // Make the HTTP GET request to the API
+    const isQualified = await fetch(`${baseUrlChainbase}?${params}`, { headers })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (!data || !data.data || data.data.length === 0) {
+        console.log('User not qualified for task 8!');
+        return false; // Indicate that the user is not qualified
+      }
+
+      // Extract the data from the response
+      const transfers = data.data;
+
+      // Filter the transfers based on the specified addresses
+      const filteredTransfers = transfers.filter(
+        (transfer: { to_address: string }) =>
+          transfer.to_address === eth_addresses
+      );
+
+      if (filteredTransfers.length === 0) {
+        console.log('No transfers found for the specified address.');
+        return false; // Indicate that the user is not qualified
+      }
+
+      let totalPointsEarned = 0; // Variable to accumulate total points earned
+
+      // Iterate through each transfer data and process it
+      for (const transfer of filteredTransfers) {
+        const value = convertValueToReadable(transfer.value, 18);
+        const hash = transfer.transaction_hash;
+
+        // .0001 pt per $SFO
+        const totalPoint = Math.floor(Number(value) * 0.0001);
+
+        // Accumulate the total points earned
+        totalPointsEarned += totalPoint;
+
+        // Track points for the current transaction
+        await stack.track(`Swap ${value} - (any token) for $SFO on Tx [ ${hash} ]`, {
+          points: totalPoint,
+          account: eth_addresses,
+          uniqueId: eth_addresses
+        });
+
+        console.log(`Added ${totalPoint} points for transaction ${hash}`);
+      }
+
+      // Insert the total points earned into a database
+      insertDataIntoMySQL(eth_addresses, totalPointsEarned);
+
+      console.log('Total points earned:', totalPointsEarned);
+
+      return true; // Indicate that the user is qualified
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      return false; // Indicate that the user is not qualified
+    });
 
     return c.res({
       image: (
@@ -954,7 +998,7 @@ app.frame('/6th-quest', async (c) => {
           </div>
           <p style={{ fontSize: 30 }}>Task 6 - .0001 pt per $SFO 🎖️</p>
           <p style={{ margin : 0 }}>[ Swap - (any token) for $SFO ]</p>
-          {tokenData && tokenData.data && tokenData.data.length > 0 ? (
+          {isQualified ? (
             <p style={{ fontSize: 24 }}>Completed ✅</p>
           ) : (
             <p style={{ fontSize: 24 }}>Not qualified ❌</p>
@@ -1013,8 +1057,7 @@ app.frame('/7th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.NYC_SMART_CONTRACT_ADDRESS || '';
 
-    // Define the API endpoint and parameters
-    const apiUrl = 'https://api.chainbase.online/v1/token/transfers';
+    // Define parameters
     const params = new URLSearchParams({
         chain_id: '8453',
         contract_address: contractAddress,
@@ -1026,7 +1069,7 @@ app.frame('/7th-quest', async (c) => {
     });
     const headers = {
         'Accept': 'application/json',
-        'x-api-key': 'demo'
+        'x-api-key': chainBaseApiKey
     };
 
     // Function to convert raw token value to human-readable format
@@ -1038,7 +1081,7 @@ app.frame('/7th-quest', async (c) => {
     }
 
     // Make the HTTP GET request to the API
-    const isQualified = await fetch(`${apiUrl}?${params}`, { headers })
+    const isQualified = await fetch(`${baseUrlChainbase}?${params}`, { headers })
     .then(async (response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -1198,8 +1241,7 @@ app.frame('/8th-quest', async (c) => {
     // Contract address
     const contractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS || '';
 
-    // Define the API endpoint and parameters
-    const apiUrl = 'https://api.chainbase.online/v1/token/transfers';
+    // Define parameters
     const params = new URLSearchParams({
         chain_id: '8453',
         contract_address: contractAddress,
@@ -1211,7 +1253,7 @@ app.frame('/8th-quest', async (c) => {
     });
     const headers = {
         'Accept': 'application/json',
-        'x-api-key': 'demo'
+        'x-api-key': chainBaseApiKey
     };
 
     // Function to convert raw token value to human-readable format
@@ -1223,7 +1265,7 @@ app.frame('/8th-quest', async (c) => {
     }
 
     // Make the HTTP GET request to the API
-    const isQualified = await fetch(`${apiUrl}?${params}`, { headers })
+    const isQualified = await fetch(`${baseUrlChainbase}?${params}`, { headers })
     .then(async (response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
