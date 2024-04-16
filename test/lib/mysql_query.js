@@ -72,3 +72,22 @@ const delete_data =
     IN 
     ('0x86924c37A93734E8611Eb081238928a9d18a63c0', '0xa260CF1726a6a5e0B7079f708823FC8E884611CB', '0xF143db60A0B1cBb8076B786Eb6635b93f18db744');
     `
+
+const clear_table = 
+    `
+    DELETE FROM 1st_quest;
+    DELETE FROM 2nd_quest;
+    DELETE FROM 3rd_quest;
+    DELETE FROM 4th_quest;
+    DELETE FROM 5th_quest;
+    DELETE FROM 6th_quest;
+    DELETE FROM 7th_quest;
+    DELETE FROM 8th_quest;
+    DELETE FROM 9th_quest;
+    DELETE FROM 10th_quest;
+    DELETE FROM 11th_quest;
+    DELETE FROM 12th_quest;
+    DELETE FROM 13th_quest;
+    DELETE FROM 14th_quest;
+    DELETE FROM final_points;
+    `
