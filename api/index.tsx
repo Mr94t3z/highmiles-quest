@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import mysql from 'mysql';
 
 // Uncomment this packages to tested on local server
-// import { devtools } from 'frog/dev';
-// import { serveStatic } from 'frog/serve-static';
+import { devtools } from 'frog/dev';
+import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -2413,16 +2413,18 @@ app.frame('/check-points', async (c) => {
 
     const point = await stack.getLeaderboardRank(eth_addresses);
 
-    const rank = point.rank;
+    // Ensure that point data is not null
+    if (point && point.points) {
+      const total_point = point.points;
 
-    const total_point = point.points;
+      // If there are total points, proceed to aggregate and store them
+      if (total_point) {
+        // Get total points from all quest tables
+        const totalPoints = await getPointsByAddress(eth_addresses);
 
-    if(total_point) {
-      // Get total points from all quest tables
-      const totalPoints = await getPointsByAddress(eth_addresses);
-
-      // Insert total points into the final_points table
-      insertDataIntoMySQL(eth_addresses, totalPoints);
+        // Insert total points into the final_points table
+        insertDataIntoMySQL(eth_addresses, totalPoints);
+      }
     }
 
     return c.res({
@@ -2464,23 +2466,18 @@ app.frame('/check-points', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          {rank? (
-          <p style={{ fontSize: 30 }}>Rank #{rank} 🏁</p>
+          {point && point.rank? (
+          <p style={{ fontSize: 30 }}>Rank #{point.rank} 🏁</p>
           ) : (
             <p></p>
           )}
-          {total_point? (
-          <p style={{ margin : 0 }}>[ You've collected {total_point} points 🎖️ ]</p>
+          {point && point.points? (
+          <p style={{ margin : 0 }}>[ You've collected {point.points} points 🎖️ ]</p>
           ) : (
-            <p></p>
+            <p>[ You need to complete at least 1 task. ]</p>
           )}
-          {rank && total_point? (
+          {point && point.points ? (
             <p style={{ fontSize: 24}}>Thank you for your participation in the HighMiles© {questMonth} Quest!</p>
-          ) : (
-            <p></p>
-          )}
-          {!rank && !total_point? (
-          <p>[ You need to complete at least 1 task. ]</p>
           ) : (
             <p></p>
           )}
@@ -2501,7 +2498,7 @@ app.frame('/check-points', async (c) => {
 
 
 // Uncomment for local server testing
-// devtools(app, { serveStatic });
+devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
