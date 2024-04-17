@@ -6,7 +6,7 @@ dotenv.config();
 // Initialize Airstack with your API key
 init(process.env.AIRSTACK_API_KEY);
 
-const username = ""
+const username = "sirsu"
 
 // Define your GraphQL query
 const query = `
