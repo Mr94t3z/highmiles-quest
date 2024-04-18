@@ -2466,12 +2466,12 @@ app.frame('/check-points', async (c) => {
             />
             <span style={{ marginLeft: '25px' }}>Hi, @{userData.username} 👩🏻‍✈️</span>
           </div>
-          {point && point.rank? (
+          {point && point.rank ? (
           <p style={{ fontSize: 30 }}>Rank #{point.rank} 🏁</p>
           ) : (
             <p></p>
           )}
-          {point && point.points? (
+          {point && point.points ? (
           <p style={{ margin : 0 }}>[ You've collected {point.points} points 🎖️ ]</p>
           ) : (
             <p>[ You need to complete at least 1 task. ]</p>
