@@ -479,15 +479,19 @@ app.frame('/3rd-quest', async (c) => {
 
     // List of NFTs that can be minted with $crash
     const tokens = [
-      '0x6EDed07dd3E9a3215a005eB4E588adF1810B77BC:4',
-      '0xB704c29279664F873Dc138e16389C8152A132269:3',
-      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:3',
-      '0x72AA38D5fc500eD2910ed29ac8B8A79a84607500:1',
-      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:1',
-      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:47',
-      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:46',
-      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:2',
-      '0xd2Fdd31E00826B0a11678d87f791fB4ae84c2809:2'
+      '0x6EDed07dd3E9a3215a005eB4E588adF1810B77BC:4', // https://zora.co/collect/base:0x6EDed07dd3E9a3215a005eB4E588adF1810B77BC/4
+      '0xB704c29279664F873Dc138e16389C8152A132269:3', // https://zora.co/collect/base:0xb704c29279664f873dc138e16389c8152a132269/3
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:3', // https://zora.co/collect/base:0x6c4e4eae8ba72407e47d430da43a450e170cb2d6/2
+      '0x72AA38D5fc500eD2910ed29ac8B8A79a84607500:1', // https://zora.co/collect/base:0x72aa38d5fc500ed2910ed29ac8b8a79a84607500/1
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:1', // https://zora.co/collect/base:0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6/1
+      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:47', //https://zora.co/collect/base:0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b/47
+      '0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b:46', // https://zora.co/collect/base:0xA0487Df3ab7a9E7Ba2fd6BB9acDa217D0930217b/46
+      '0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6:2', // https://zora.co/collect/base:0x6C4E4EAE8Ba72407e47d430DA43a450e170CB2d6/2
+      '0xd2Fdd31E00826B0a11678d87f791fB4ae84c2809:2', // https://zora.co/collect/base:0xd2fdd31e00826b0a11678d87f791fb4ae84c2809/1
+      '0x98d44e4d84bb87189f7606674d13aa145d0dda15:4', // https://zora.co/collect/base:0x98d44e4d84bb87189f7606674d13aa145d0dda15/4
+      '0x1235da5474a503a33d5728aed13e387ad1a9f85e:38', // https://zora.co/collect/base:0x1235da5474a503a33d5728aed13e387ad1a9f85e/38
+      '0x0c592ebfcc66ef61d10e05cb48074d54dd8af859:1', //https://zora.co/collect/base:0x0c592ebfcc66ef61d10e05cb48074d54dd8af859/1
+      '0x863467086802da7ce90eafd5edf8ebe37228ee0b:1' //https://zora.co/collect/base:0x863467086802da7ce90eafd5edf8ebe37228ee0b/1
     ];
 
     // Fetch user tokens
