@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import mysql from 'mysql';
 
 // Uncomment this packages to tested on local server
-// import { devtools } from 'frog/dev';
-// import { serveStatic } from 'frog/serve-static';
+import { devtools } from 'frog/dev';
+import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -1620,9 +1620,10 @@ app.frame('/10th-quest', async (c) => {
           input: {
             filter: {
               castedBy: {_eq: "fc_fname:${userData.username}"}
-              castedAtTimestamp: {_gte: "2024-04-01T00:00:00Z"}
+              castedAtTimestamp: {_gte: "2024-04-01T00:00:00Z", _lte:"2024-04-28T00:00:00Z"}
             },
             blockchain: ALL
+            limit: 200
           }
         ) 
         {
@@ -2474,7 +2475,7 @@ app.frame('/check-points', async (c) => {
           {point && point.points ? (
           <p style={{ margin : 0 }}>[ You've collected {point.points} points 🎖️ ]</p>
           ) : (
-            <p>[ You need to complete at least 1 task. ]</p>
+            <p>[ You need to complete at least 1 task! ]</p>
           )}
           {point && point.points ? (
             <p style={{ fontSize: 24}}>Thank you for your participation in the HighMiles© {questMonth} Quest!</p>
@@ -2498,7 +2499,7 @@ app.frame('/check-points', async (c) => {
 
 
 // Uncomment for local server testing
-// devtools(app, { serveStatic });
+devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)
