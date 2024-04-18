@@ -491,7 +491,8 @@ app.frame('/3rd-quest', async (c) => {
       '0x98d44e4d84bb87189f7606674d13aa145d0dda15:4', // https://zora.co/collect/base:0x98d44e4d84bb87189f7606674d13aa145d0dda15/4
       '0x1235da5474a503a33d5728aed13e387ad1a9f85e:38', // https://zora.co/collect/base:0x1235da5474a503a33d5728aed13e387ad1a9f85e/38
       '0x0c592ebfcc66ef61d10e05cb48074d54dd8af859:1', //https://zora.co/collect/base:0x0c592ebfcc66ef61d10e05cb48074d54dd8af859/1
-      '0x863467086802da7ce90eafd5edf8ebe37228ee0b:1' //https://zora.co/collect/base:0x863467086802da7ce90eafd5edf8ebe37228ee0b/1
+      '0x863467086802da7ce90eafd5edf8ebe37228ee0b:1', //https://zora.co/collect/base:0x863467086802da7ce90eafd5edf8ebe37228ee0b/1
+      '0x1235da5474a503a33d5728aed13e387ad1a9f85e:4', //https://zora.co/collect/base:0x1235da5474a503a33d5728aed13e387ad1a9f85e/4
     ];
 
     // Fetch user tokens
