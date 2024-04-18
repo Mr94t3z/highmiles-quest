@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import mysql from 'mysql';
 
 // Uncomment this packages to tested on local server
-import { devtools } from 'frog/dev';
-import { serveStatic } from 'frog/serve-static';
+// import { devtools } from 'frog/dev';
+// import { serveStatic } from 'frog/serve-static';
 
 // Uncomment to use Edge Runtime.
 // export const config = {
@@ -1664,13 +1664,15 @@ app.frame('/10th-quest', async (c) => {
                 ) {
                     // Add points earned for each cast
                     totalPointsEarned += 10;
+                    const channelId = cast.channel.channelId;
 
                     // Insert points for each cast
-                    await stack.track(`Tip ${claim_amount} - Casts made in /747air /higher /imagine /enjoy or /degen channels (up to 50 tip)`, {
+                    await stack.track(`Tip ${claim_amount} - Casts in /${channelId} channels by @${userData.username}.`, {
                         points: 10,
                         account: eth_addresses,
                         uniqueId: eth_addresses
                     });
+
                     console.log(`Found ${claim_amount} cast tip for this user.`);
                     claim_amount++;
 
@@ -2499,7 +2501,7 @@ app.frame('/check-points', async (c) => {
 
 
 // Uncomment for local server testing
-devtools(app, { serveStatic });
+// devtools(app, { serveStatic });
 
 export const GET = handle(app)
 export const POST = handle(app)

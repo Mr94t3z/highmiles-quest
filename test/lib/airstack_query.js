@@ -1,4 +1,5 @@
 import { init, fetchQuery } from "@airstack/node";
+import { StackClient } from "@stackso/js-core";
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
@@ -6,7 +7,14 @@ dotenv.config();
 // Initialize Airstack with your API key
 init(process.env.AIRSTACK_API_KEY);
 
-const username = "0x94t3z"
+// Initialize the client
+const stack = new StackClient({
+  // Get your API key and point system id from the Stack dashboard (stack.so)
+  apiKey: process.env.STACK_API_KEY || '', 
+  pointSystemId: parseInt(process.env.STACK_POINT_SYSTEM_ID || ''),
+});
+
+const username = "sirsu"
 
 // Define your GraphQL query
 const query = `
@@ -15,7 +23,7 @@ const query = `
         input: {
           filter: {
             castedBy: {_eq: "fc_fname:${username}"}
-            castedAtTimestamp: {_gte: "2024-04-10T00:00:00Z", _lte:"2024-04-28T00:00:00Z"}
+            castedAtTimestamp: {_gte: "2024-04-01T00:00:00Z", _lte:"2024-04-28T00:00:00Z"}
           },
           blockchain: ALL
           limit: 200
@@ -36,10 +44,10 @@ const query = `
 
     const { data, error } = await fetchQuery(query);
 
-    // Access the data
-    const casts = data.FarcasterCasts.Cast;
+    // // Access the data
+    // const casts = data.FarcasterCasts.Cast;
 
-    console.log("Data:", casts);
+    // console.log("Data:", casts);
 
     if (error) {
       console.error("Error fetching data:", error);
