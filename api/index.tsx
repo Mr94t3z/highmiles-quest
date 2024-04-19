@@ -198,7 +198,8 @@ app.frame('/1st-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
+
     
     const responseUserCollected = await fetch(`${baseUrlReservoir}/users/${eth_addresses}/collections/v4?collection=${contractAddress}`, {
       method: 'GET',
@@ -336,7 +337,7 @@ app.frame('/2nd-quest', async (c) => {
     // Check if data is available
     if (tokenData.results && tokenData.results.length > 0) {
       // User connected wallet address
-      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
     
       // Format the data as collection_address:token_id
       const formattedTokens = tokenData.results.map((token: { collection_address: any; token_id: any; }) => `${token.collection_address}:${token.token_id}`);
@@ -475,7 +476,7 @@ app.frame('/3rd-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // List of NFTs that can be minted with $crash
     const tokens = [
@@ -613,7 +614,7 @@ app.frame('/4th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Token address
     const tokenAddress = process.env.IMAGINE_X_747_AIR_NFT_TOKEN_ADDRESS || '';
@@ -738,7 +739,7 @@ app.frame('/5th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Token address
     const tokenAddress = process.env.PASSENGER_TICKET_AND_BAGGAGE_CHECK_TOKEN_ADDRESS || '';
@@ -878,7 +879,7 @@ app.frame('/6th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Contract address
     const contractAddress = process.env.SFO_SMART_CONTRACT_ADDRESS || '';
@@ -1061,7 +1062,7 @@ app.frame('/7th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Contract address
     const contractAddress = process.env.NYC_SMART_CONTRACT_ADDRESS || '';
@@ -1244,7 +1245,7 @@ app.frame('/8th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Contract address
     const contractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS || '';
@@ -1427,7 +1428,7 @@ app.frame('/9th-quest', async (c) => {
       const userData = data.users[0];
 
       // User connected wallet address
-      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+      const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
       const crashContractAddress = process.env.CRASH_SMART_CONTRACT_ADDRESS;
       const poolsContractAddress = process.env.WETH_CRASH_POOLS_SMART_CONTRACT_ADDRESS;
@@ -1616,7 +1617,7 @@ app.frame('/10th-quest', async (c) => {
     const userData = dataResponse.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     // Define FarcasterCasts GraphQL query
     const query = `
@@ -1785,7 +1786,7 @@ app.frame('/11th-quest', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     const targetAddress = process.env.COINBASE_COMMERCE_WALLET_ADDRESS || '';
 
@@ -2025,7 +2026,7 @@ app.frame('/12th-quest', async (c) => {
     const userFollowing = userIsFollow.users[0].viewer_context.following;
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     if (userFollowing) {
       // Insert data into database if user is qualified
@@ -2152,7 +2153,7 @@ app.frame('/13th-quest', async (c) => {
     const userFollowing = channelData.viewer_context.following;
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     if (userFollowing) {
       // Insert data into database if user is qualified
@@ -2266,7 +2267,7 @@ app.frame('/14th-quest', async (c) => {
     const name = userData.display_name;
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     if (name.includes('✈️')) {
       // Insert data into database if user is qualified
@@ -2417,7 +2418,7 @@ app.frame('/check-points', async (c) => {
     const userData = data.users[0];
 
     // User connected wallet address
-    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+    const eth_addresses = userData.verified_addresses.eth_addresses.toString().toLowerCase().split(',')[0];
 
     const point = await stack.getLeaderboardRank(eth_addresses);
 
