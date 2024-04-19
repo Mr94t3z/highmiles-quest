@@ -272,7 +272,7 @@ app.frame('/1st-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF	'>Mint ⌁</Button.Link>,
+        <Button.Link href='https://forage.xyz/p/01HT3MC4CTKPVQWQ6TX052RXGF'>Mint ⌁</Button.Link>,
         <Button action='/1st-quest'>🔄 Refresh</Button>,
         <Button action='/'>⏪ Back</Button>,
         <Button action='/2nd-quest'>⏩️ Next</Button>,
