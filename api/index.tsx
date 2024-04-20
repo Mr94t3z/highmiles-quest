@@ -282,8 +282,37 @@ app.frame('/1st-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/1st-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -439,8 +468,37 @@ app.frame('/2nd-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/2nd-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -577,8 +635,37 @@ app.frame('/3rd-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/3rd-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -700,8 +787,37 @@ app.frame('/4th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/4th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -842,8 +958,37 @@ app.frame('/5th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/5th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -1025,8 +1170,37 @@ app.frame('/6th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/6th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -1208,8 +1382,37 @@ app.frame('/7th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/7th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -1391,8 +1594,37 @@ app.frame('/8th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/8th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -1579,8 +1811,37 @@ app.frame('/9th-quest', async (c) => {
   } catch (error) {
       console.error('Error fetching user data:', error);
       return c.res({
-          image: <div style={{ color: 'red' }}>An error occurred.</div>,
-      });
+        image: (
+            <div
+                style={{
+                    alignItems: 'center',
+                    background: '#1A30FF',
+                    backgroundSize: '100% 100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexWrap: 'nowrap',
+                    height: '100%',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    width: '100%',
+                    color: 'white',
+                    fontFamily: 'Space Mono',
+                    fontSize: 35,
+                    fontStyle: 'normal',
+                    letterSpacing: '-0.025em',
+                    lineHeight: 1.4,
+                    marginTop: 0,
+                    padding: '0 120px',
+                    whiteSpace: 'pre-wrap',
+                }}
+            >
+              Uh oh, you clicked the button too fast! Please try again.
+            </div>
+        ),
+        intents: [
+            <Button action='/9th-quest'>⏏︎ Try Again</Button>,
+        ],
+    });
   }
 });
 
@@ -1749,8 +2010,37 @@ app.frame('/10th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/10th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -1975,8 +2265,37 @@ app.frame('/11th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/11th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -2100,8 +2419,37 @@ app.frame('/12th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/12th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -2227,8 +2575,37 @@ app.frame('/13th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/13th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -2342,8 +2719,37 @@ app.frame('/14th-quest', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/14th-quest'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
@@ -2500,8 +2906,37 @@ app.frame('/check-points', async (c) => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     return c.res({
-      image: <div style={{ color: 'red' }}>An error occurred.</div>,
-    });
+      image: (
+          <div
+              style={{
+                  alignItems: 'center',
+                  background: '#1A30FF',
+                  backgroundSize: '100% 100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexWrap: 'nowrap',
+                  height: '100%',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: 'white',
+                  fontFamily: 'Space Mono',
+                  fontSize: 35,
+                  fontStyle: 'normal',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.4,
+                  marginTop: 0,
+                  padding: '0 120px',
+                  whiteSpace: 'pre-wrap',
+              }}
+          >
+            Uh oh, you clicked the button too fast! Please try again.
+          </div>
+      ),
+      intents: [
+          <Button action='/check-points'>⏏︎ Try Again</Button>,
+      ],
+  });
   }
 });
 
