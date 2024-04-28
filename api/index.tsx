@@ -157,7 +157,6 @@ app.frame('/', (c) => {
               </div>
           ),
           intents: [
-              // <Button action='/check-points'>🏁 Check Points</Button>,
               <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
           ],
       });
@@ -202,7 +201,6 @@ app.frame('/1st-quest', async (c) => {
         </div>
       ),
       intents: [
-        // <Button action='/check-points'>🏁 Check Points</Button>,
         <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
       ],
     });
