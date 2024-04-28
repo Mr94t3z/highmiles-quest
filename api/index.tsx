@@ -157,7 +157,7 @@ app.frame('/', (c) => {
               </div>
           ),
           intents: [
-              <Button action='/check-points'>🏁 Start Quest</Button>,
+              <Button action='/check-points'>🏁 Check Points</Button>,
               <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
           ],
       });
@@ -166,6 +166,48 @@ app.frame('/', (c) => {
 
 // 1st Quest
 app.frame('/1st-quest', async (c) => {
+
+  // Set the end date of the quest
+  const endDate = new Date(endDateString);
+
+  // Check if the end date has passed
+  if (currentDate > endDate) {
+    return c.res({
+      image: (
+        <div
+          style={{
+            alignItems: 'center',
+            background: '#1A30FF',
+            backgroundSize: '100% 100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            height: '100%',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            color: 'white',
+            fontFamily: 'Space Mono',
+            fontSize: 35,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 0,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <p>Hi Passengers! 👨🏻‍✈️</p>
+          HighMiles© {questMonth} Quest already ended :(
+        </div>
+      ),
+      intents: [
+        <Button action='/check-points'>🏁 Check Points</Button>,
+        <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
+      ],
+    });
+  }
+
   const { frameData } = c;
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
@@ -223,6 +265,8 @@ app.frame('/1st-quest', async (c) => {
     } else {
       console.log('User not qualified for task 1!');
     }
+
+    
 
     return c.res({
       image: (
