@@ -157,7 +157,7 @@ app.frame('/', (c) => {
               </div>
           ),
           intents: [
-              <Button action='/check-points'>🏁 Check Points</Button>,
+              // <Button action='/check-points'>🏁 Check Points</Button>,
               <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
           ],
       });
@@ -202,7 +202,7 @@ app.frame('/1st-quest', async (c) => {
         </div>
       ),
       intents: [
-        <Button action='/check-points'>🏁 Check Points</Button>,
+        // <Button action='/check-points'>🏁 Check Points</Button>,
         <Button.Link href={`${leaderboardUrl}`}>✈️ Leaderboard</Button.Link>
       ],
     });
@@ -2803,57 +2803,57 @@ app.frame('/check-points', async (c) => {
   const { fid } = frameData as unknown as { buttonIndex?: number; fid?: string };
 
   // Function to insert data into MySQL
-  // function insertDataIntoMySQL(address: any, points: any) {
-  //   const sql = `INSERT INTO final_points (address, points) VALUES (?, ?) 
-  //               ON DUPLICATE KEY UPDATE points = VALUES(points)`;
+  function insertDataIntoMySQL(address: any, points: any) {
+    const sql = `INSERT INTO final_points (address, points) VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE points = VALUES(points)`;
     
-  //   connection.query(sql, [address, points], (err) => {
-  //       if (err) {
-  //           console.error('Error inserting data into MySQL:', err);
-  //       } else {
-  //           console.log('Data inserted into MySQL for address:', address);
-  //       }
-  //   });
-  // }
+    connection.query(sql, [address, points], (err) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+        } else {
+            console.log('Data inserted into MySQL for address:', address);
+        }
+    });
+  }
 
   // Function to query points by address from each quest table and calculate the total points
-  // async function getPointsByAddress(address: string): Promise<number> {
-  //   let totalPoints = 0;
+  async function getPointsByAddress(address: string): Promise<number> {
+    let totalPoints = 0;
 
-  //   // Iterate through each quest table and sum up the points
-  //   for (let i = 1; i <= 14; i++) {
-  //     let tableName;
-  //     if (i === 1) {
-  //       tableName = '1st_quest';
-  //     } else if (i === 2) {
-  //       tableName = '2nd_quest';
-  //     } else if (i === 3) {
-  //       tableName = '3rd_quest';
-  //     } else {
-  //       tableName = `${i}th_quest`;
-  //     }
+    // Iterate through each quest table and sum up the points
+    for (let i = 1; i <= 14; i++) {
+      let tableName;
+      if (i === 1) {
+        tableName = '1st_quest';
+      } else if (i === 2) {
+        tableName = '2nd_quest';
+      } else if (i === 3) {
+        tableName = '3rd_quest';
+      } else {
+        tableName = `${i}th_quest`;
+      }
 
-  //     const query = `SELECT points FROM ${tableName} WHERE address = ?`;
+      const query = `SELECT points FROM ${tableName} WHERE address = ?`;
 
-  //     await new Promise<void>((resolve, reject) => {
-  //       connection.query(query, [address], (err, results) => {
-  //         if (err) {
-  //           console.error(`Error querying points from ${tableName}:`, err);
-  //           reject(err);
-  //           return;
-  //         }
+      await new Promise<void>((resolve, reject) => {
+        connection.query(query, [address], (err, results) => {
+          if (err) {
+            console.error(`Error querying points from ${tableName}:`, err);
+            reject(err);
+            return;
+          }
 
-  //         if (results.length > 0) {
-  //           totalPoints += results[0].points;
-  //         }
+          if (results.length > 0) {
+            totalPoints += results[0].points;
+          }
 
-  //         resolve();
-  //       });
-  //     });
-  //   }
+          resolve();
+        });
+      });
+    }
 
-  //   return totalPoints;
-  // }
+    return totalPoints;
+  }
 
   try {
     const response = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${fid}&viewer_fid=${fid}`, {
@@ -2873,18 +2873,18 @@ app.frame('/check-points', async (c) => {
     const point = await stack.getLeaderboardRank(eth_addresses);
 
     // Ensure that point data is not null
-    // if (point && point.points) {
-    //   const total_point = point.points;
+    if (point && point.points) {
+      const total_point = point.points;
 
-    //   // If there are total points, proceed to aggregate and store them
-    //   if (total_point) {
-    //     // Get total points from all quest tables
-    //     const totalPoints = await getPointsByAddress(eth_addresses);
+      // If there are total points, proceed to aggregate and store them
+      if (total_point) {
+        // Get total points from all quest tables
+        const totalPoints = await getPointsByAddress(eth_addresses);
 
-    //     // Insert total points into the final_points table
-    //     insertDataIntoMySQL(eth_addresses, totalPoints);
-    //   }
-    // }
+        // Insert total points into the final_points table
+        insertDataIntoMySQL(eth_addresses, totalPoints);
+      }
+    }
 
     return c.res({
       image: (
